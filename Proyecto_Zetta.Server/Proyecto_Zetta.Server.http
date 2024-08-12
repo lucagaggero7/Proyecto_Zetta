@@ -1,0 +1,6 @@
+@Proyecto_Zetta.Server_HostAddress = http://localhost:5186
+
+GET {{Proyecto_Zetta.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
