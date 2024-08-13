@@ -11,6 +11,7 @@ namespace Proyecto_Zetta.DB.Data.Entity
     [Index(nameof(Apellido), nameof(Nombre), Name = "Cliente_Apellido_Nombre", IsUnique = false)]
     public class Cliente : EntityBase
     {
+
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(40, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public string Nombre { get; set; }
