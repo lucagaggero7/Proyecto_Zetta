@@ -23,7 +23,10 @@ namespace Proyecto_Zetta.DB.Data.Entity
 
         [Required(ErrorMessage = "La opcion materiales es obligatoria.")]
         [MaxLength(2, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public char IncluyeMateriales { get; set; }
+        public char InclMateriales { get; set; }
+
+        [MaxLength(250, ErrorMessage = "Maximo numero de caracteres {1}.")]
+        public string? Materiales { get; set; }
 
         [Required(ErrorMessage = "La fecha de alta es obligatoria.")]
         public DateTime FechaAlta { get; set; }
@@ -33,6 +36,9 @@ namespace Proyecto_Zetta.DB.Data.Entity
         [MaxLength(2, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public char Mantenimiento { get; set; }
         public DateTime? FechaMantenimiento{ get; set; }
+
+        [MaxLength(45, ErrorMessage = "Maximo numero de caracteres {1}.")]
+        public string? AnexarServicio { get; set; }
 
         //claves foraneas 
         public int InstaladorId { get; set; }

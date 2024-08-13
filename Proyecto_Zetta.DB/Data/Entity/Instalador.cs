@@ -11,6 +11,9 @@ namespace Proyecto_Zetta.DB.Data.Entity
     [Index(nameof(Apellido), nameof(Nombre), Name = "Instalador_Apellido_Nombre", IsUnique = false)]
     public class Instalador : EntityBase
     {
+        [Required(ErrorMessage = "El estado es obligatorio.")]
+        public bool Activo { get; set; }
+
         [Required(ErrorMessage = "La actividad es obligatoria.")]
         [MaxLength(40, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public string Actividad { get; set; }
