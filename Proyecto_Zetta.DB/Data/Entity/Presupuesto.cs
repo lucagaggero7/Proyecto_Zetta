@@ -26,12 +26,13 @@ namespace Proyecto_Zetta.DB.Data.Entity
         [MaxLength(30, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public long PrecioFinal { get; set; }
 
-        [MaxLength(30, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public string? FormadePago { get; set; }
-
-        //clave foranea
+        //claves foraneas
         public int ObraId { get; set; }
         public  Obra Obra { get; set; }
+        public int ClienteId { get; set; }
+        public Cliente Cliente { get; set; }
+        public int Forma_de_PagoId { get; set; }
+        public Forma_de_Pago Forma_de_Pago { get; set; }
 
     }
 }
