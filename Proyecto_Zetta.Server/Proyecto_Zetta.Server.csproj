@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Proyecto_Zetta.DB\Proyecto_Zetta.DB.csproj" />
+    <ProjectReference Include="..\Proyecto_Zetta.Shared\Proyecto_Zetta.Shared.csproj" />
   </ItemGroup>
 
 </Project>
