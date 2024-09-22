@@ -33,8 +33,8 @@ namespace Proyecto_Zetta.Server.Controllers
             return Verif;
         }
 
-        [HttpGet("GetByEst/{nom}")] //api/Obra/2
-        public async Task<ActionResult<Obra>> GetByNom(string est)
+        [HttpGet("GetByEst/{est}")] //api/Obra/2
+        public async Task<ActionResult<Obra>> GetByEst(string est)
         {
             var Verif = await context.Obras.FirstOrDefaultAsync(x => x.Estado == est);
             if (Verif == null)
