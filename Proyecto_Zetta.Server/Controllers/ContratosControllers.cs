@@ -3,6 +3,8 @@ using Proyecto_Zetta.DB.Data.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Proyecto_Zetta.Shared.DTO;
+using AutoMapper;
+using Proyecto_Zetta.Server.Repositorio;
 
 namespace Proyecto_Zetta.Server.Controllers
 {
@@ -10,22 +12,25 @@ namespace Proyecto_Zetta.Server.Controllers
     [Route("api/Contratos")]
     public class ContratosControllers : ControllerBase
     {
-        private readonly Context context;
-        public ContratosControllers(Context context)
+        private readonly IObraRepositorio repositorio;
+        private readonly IMapper mapper;
+
+        public ContratosControllers(IObraRepositorio repositorio ,IMapper mapper)
         {
-            this.context = context;
+            this.repositorio = repositorio;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Obra>>> get()
+        public async Task<ActionResult<List<Obra>>> Get()
         {
-            return await context.Obras.ToListAsync();
+            return await repositorio.Select();
         }
 
         [HttpGet("GetById/{id:int}")] //api/Obra/2
         public async Task<ActionResult<Obra>> GetById(int id)
         {
-            var Verif = await context.Obras.FirstOrDefaultAsync(x => x.Id == id);
+            var Verif = await repositorio.SelectById(id);
             if (Verif == null)
             {
                 return NotFound();
@@ -33,15 +38,22 @@ namespace Proyecto_Zetta.Server.Controllers
             return Verif;
         }
 
-        [HttpGet("GetByEst/{est}")] //api/Obra/2
+        [HttpGet("GetByEst/{est}")] //api/Obra/GetByEst/Activo
         public async Task<ActionResult<Obra>> GetByEst(string est)
         {
-            var Verif = await context.Obras.FirstOrDefaultAsync(x => x.Estado == est);
+            Obra? Verif = await repositorio.SelectByEst(est);
             if (Verif == null)
             {
                 return NotFound();
             }
             return Verif;
+        }
+
+        [HttpGet("existe/{id:int}")] //api/Obras/existe/2
+        public async Task<ActionResult<bool>> Existe(int id)
+        {
+            var existe = await repositorio.Existe(id);
+            return existe;
         }
 
         [HttpPost]
@@ -49,20 +61,20 @@ namespace Proyecto_Zetta.Server.Controllers
         {
             try
             {
-                Obra entidad = new Obra();
-                entidad.Estado = entidadDTO.Estado;
-                entidad.Tipo = entidadDTO.Tipo;
-                entidad.Descripcion = entidadDTO.Descripcion;
-                entidad.Materiales = entidadDTO.Materiales;
-                entidad.FechaAlta = entidadDTO.FechaAlta;
-                entidad.FechaBaja = entidadDTO.FechaBaja;
-                entidad.AnexarServicio = entidadDTO.AnexarServicio;
-                entidad.InstaladorId = entidadDTO.InstaladorId;
+                //Obra entidad = new Obra();
+                //entidad.Estado = entidadDTO.Estado;
+                //entidad.Tipo = entidadDTO.Tipo;
+                //entidad.Descripcion = entidadDTO.Descripcion;
+                //entidad.Materiales = entidadDTO.Materiales;
+                //entidad.FechaAlta = entidadDTO.FechaAlta;
+                //entidad.FechaBaja = entidadDTO.FechaBaja;
+                //entidad.AnexarServicio = entidadDTO.AnexarServicio;
+                //entidad.InstaladorId = entidadDTO.InstaladorId;
+
+                Obra entidad = mapper.Map<Obra>(entidadDTO);
 
 
-                context.Obras.Add(entidad);
-                await context.SaveChangesAsync();
-                return entidad.Id;
+                return await repositorio.Insert(entidad);
             }
             catch (Exception e)
             {
@@ -70,56 +82,41 @@ namespace Proyecto_Zetta.Server.Controllers
             }
         }
 
-        [HttpPut("{id:int}")] //api/Obra/2
-        public async Task<ActionResult> Put(int Id, [FromBody] Obra entidad)
+        [HttpPut("{Id:int}")] //api/Obra/2
+        public async Task<ActionResult> Put(int Id, [FromBody] EditarObraDTO entidadDTO)
         {
-            if (Id != entidad.Id)
-            {
-                return BadRequest("Datos Incorrectos");
-            }
-            var Verif = await context.Obras
-                .Where(reg => reg.Id == Id).FirstOrDefaultAsync();
-
-            if (Verif == null)
-            {
-                return NotFound("No existe el recurso buscado.");
-            }
-
-            Verif.Estado = entidad.Estado;
-            Verif.Tipo = entidad.Tipo;
-            Verif.Descripcion = entidad.Descripcion;
-            Verif.Materiales = entidad.Materiales;
-            Verif.FechaAlta = entidad.FechaAlta;
-            Verif.FechaBaja = entidad.FechaBaja;
-            Verif.AnexarServicio = entidad.AnexarServicio;
-
             try
             {
-                context.Obras.Update(Verif);
-                await context.SaveChangesAsync();
+                if (Id != entidadDTO.Id)
+                {
+                    return BadRequest("Datos Incorrectos");
+                }
+                Obra entidad = mapper.Map<Obra>(entidadDTO);
+                var Verif = await repositorio.Update(Id, entidad);
+
+                if (!Verif)
+                {
+                    return BadRequest("No se pudo actualizar el tipo de documento");
+                }
                 return Ok();
+
             }
             catch (Exception e)
             {
-
-                return BadRequest(e.Message);
+                return BadRequest(e.InnerException.Message);
             }
         }
 
         [HttpDelete("{id:int}")] //api/Obra/2
         public async Task<ActionResult> Delete(int id)
         {
-            var existe = await context.Obras.AnyAsync(x => x.Id == id);
-            if (!existe)
+            var resp = await repositorio.Drop(id);
+
+            if(!resp)
             {
-                return NotFound($" El recurso {id} no existe.");
+                return BadRequest("La obra no se pudo borrar");
+
             }
-
-            Obra EntidadABorrar = new Obra();
-            EntidadABorrar.Id = id;
-
-            context.Remove(EntidadABorrar);
-            await context.SaveChangesAsync();
             return Ok();
 
         }
