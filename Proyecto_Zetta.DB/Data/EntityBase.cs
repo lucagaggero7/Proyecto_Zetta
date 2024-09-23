@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Proyecto_Zetta.DB.Data
 {
-    public class EntityBase
+    public class EntityBase : IEntityBase
     {
-        public int  Id { get; set; }
+        public int Id { get; set; }
     }
 }

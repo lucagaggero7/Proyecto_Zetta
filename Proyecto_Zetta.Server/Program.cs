@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Proyecto_Zetta.DB.Data;
+using Proyecto_Zetta.Server.Repositorio;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<Context>(op => op.UseSqlServer("name=conn"));
 
 
+builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddScoped<IObraRepositorio, ObraRepositorio>();
 
 
 
