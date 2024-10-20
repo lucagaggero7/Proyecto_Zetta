@@ -87,11 +87,12 @@ namespace Proyecto_Zetta.Server.Controllers
         {
             try
             {
-                if (Id != entidadDTO.Id)
+                Obra entidad = mapper.Map<Obra>(entidadDTO);
+                if (Id != entidad.Id)
                 {
                     return BadRequest("Datos Incorrectos");
                 }
-                Obra entidad = mapper.Map<Obra>(entidadDTO);
+                
                 var Verif = await repositorio.Update(Id, entidad);
 
                 if (!Verif)
