@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proyecto_Zetta.DB", "Proyec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proyecto_Zetta.Shared", "Proyecto_Zetta.Shared\Proyecto_Zetta.Shared.csproj", "{76B933FE-E3F5-4FC8-97A6-9CD4212CDBB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proyecto_Zetta.Client", "Proyecto_Zetta.Client\Proyecto_Zetta.Client.csproj", "{1A44512B-6832-419E-A512-FB34C0632E9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proyecto_Zetta.Client", "Proyecto_Zetta.Client\Proyecto_Zetta.Client.csproj", "{1A44512B-6832-419E-A512-FB34C0632E9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
