@@ -3,6 +3,10 @@
 
 @inject IHttpServicio http
 <h3>Lista de Contratos</h3>
+<br />
+<a class="btn btn-primary" href="/api/Contratos/crear">Nuevo Contrato</a>
+<br />
+
 <table>
     <tr>
         <th>
@@ -12,12 +16,17 @@
             Tipo
         </th>
     </tr>
-
+    @if(Mensaje =="")
+    {
     @if (listaContratos == null)
     {
-        <p>Buscando...</p>
-    }
-    else
+            <p>Buscando...</p>
+        }
+        else if(listaContratos.Count == 0)
+        {
+            <p>No existen contratos</p>
+        }
+        else
     {
         @foreach (var item in listaContratos)
         {
@@ -30,6 +39,11 @@
                 </td>
             </tr>
         }
+        }
+    }
+    else
+    {
+        <p> Error: @Mensaje</p>
     }
 
 </table>
@@ -53,7 +67,7 @@
         }
         else
         {
-            Mensaje = "Error";
+            Mensaje = await resp.ObtenerError();
         }
     }
 }

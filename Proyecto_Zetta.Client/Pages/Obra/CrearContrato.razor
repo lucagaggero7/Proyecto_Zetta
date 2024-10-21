@@ -1,0 +1,99 @@
+﻿@page "/api/Contratos/crear"
+@inject IHttpServicio http
+@inject NavigationManager nav
+
+
+<h3>Nuevo Contrato</h3>
+
+<EditForm Model="obra" OnValidSubmit="Grabar">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>
+            Estado
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@obra.Estado"/>
+            <ValidationMessage For="@(() => obra.Estado)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Tipo
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@obra.Tipo" />
+            <ValidationMessage For="@(() => obra.Tipo)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Descripcion
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@obra.Descripcion" />
+            <ValidationMessage For="@(() => obra.Descripcion)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Materiales
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@obra.Materiales" />
+            <ValidationMessage For="@(() => obra.Materiales)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Fecha de Alta
+        </label>
+        <div>
+            <InputDate class="form-control" @bind-Value="@obra.FechaAlta" />
+            <ValidationMessage For="@(() => obra.FechaAlta)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Anexar Servicio
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@obra.AnexarServicio" />
+            <ValidationMessage For="@(() => obra.AnexarServicio)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Id del Instalador 
+        </label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@obra.InstaladorId" />
+            <ValidationMessage For="@(() => obra.InstaladorId)" />
+        </div>
+    </div>
+
+    <br/> 
+
+    <button class="btn btn-primary" type="submit"> Aceptar </button>
+    <button class="btn btn-secondary" @onclick="Cancelar"> Cancelar </button>
+
+</EditForm>
+
+
+@code {
+    private Obra obra = new Obra();
+
+    private async Task Grabar()
+    {
+        var httpRespuesta = await http.Post<Obra>("api/Contratos", obra);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        nav.NavigateTo("/api/Contratos");
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/api/Contratos");
+    }
+}
