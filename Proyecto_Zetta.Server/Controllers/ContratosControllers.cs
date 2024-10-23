@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Proyecto_Zetta.Shared.DTO;
 using AutoMapper;
 using Proyecto_Zetta.Server.Repositorio;
+using System.IO.Pipelines;
 
 namespace Proyecto_Zetta.Server.Controllers
 {
@@ -27,10 +28,10 @@ namespace Proyecto_Zetta.Server.Controllers
             return await repositorio.Select();
         }
 
-        [HttpGet("GetById/{id:int}")] //api/Obra/2
-        public async Task<ActionResult<Obra>> GetById(int id)
+        [HttpGet("GetById/{Id:int}")] //api/GetById/2
+        public async Task<ActionResult<Obra>> GetById(int Id)
         {
-            var Verif = await repositorio.SelectById(id);
+            var Verif = await repositorio.SelectById(Id);
             if (Verif == null)
             {
                 return NotFound();
@@ -88,25 +89,18 @@ namespace Proyecto_Zetta.Server.Controllers
             try
             {
                 Obra entidad = mapper.Map<Obra>(entidadDTO);
-                if (Id != entidad.Id)
-                {
-                    return BadRequest("Datos Incorrectos");
-                }
-                
-                var Verif = await repositorio.Update(Id, entidad);
 
-                if (!Verif)
-                {
-                    return BadRequest("No se pudo actualizar el tipo de documento");
-                }
+                await repositorio.Update(entidad.Id, entidad);
                 return Ok();
-
+                //return Ok(new { message = "Actualización exitosa" });
             }
+
             catch (Exception e)
             {
                 return BadRequest(e.InnerException.Message);
             }
         }
+            
 
         [HttpDelete("{id:int}")] //api/Obra/2
         public async Task<ActionResult> Delete(int id)

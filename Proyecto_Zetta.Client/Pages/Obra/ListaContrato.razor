@@ -1,21 +1,63 @@
 ﻿@page "/api/Contratos"
 
-
 @inject IHttpServicio http
 <h3>Lista de Contratos</h3>
-<br />
-<a class="btn btn-primary" href="/api/Contratos/crear">Nuevo Contrato</a>
-<br />
 
-<table>
-    <tr>
-        <th>
-            Estado
-        </th>
-        <th>
-            Tipo
-        </th>
-    </tr>
+<a class="btn btn-primary nuevo-contrato-btn" href="/api/Contratos/crear">Nuevo Contrato</a>
+
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .nuevo-contrato-btn {
+        margin-bottom: 20px; /* Añade espacio entre el botón y la tabla */
+        transition: opacity 0.3s ease; /* Transición suave para el efecto de hover */
+    }
+
+    .nuevo-contrato-btn:hover {
+        opacity: 0.8; /* Cambia la opacidad cuando el cursor está encima */
+    }
+
+    .nuevo-contrato-btn {
+        transition: opacity 0.3s ease; /* Transición suave para el efecto de hover */
+    }
+
+    .editar-contrato-btn:hover {
+        opacity: 0.8; /* Cambia la opacidad cuando el cursor está encima */
+    }
+
+    .eliminar-contrato-btn {
+        transition: opacity 0.3s ease; /* Transición suave para el efecto de hover */
+    }
+
+    .eliminar-contrato-btn:hover {
+        opacity: 0.8; /* Cambia la opacidad cuando el cursor está encima */
+    }
+</style>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Estado</th>
+            <th>Tipo</th>
+            <th>Descripcion</th>
+            <th>Fecha de Alta</th>
+            <th>Instalador Id</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
     @if(Mensaje =="")
     {
     @if (listaContratos == null)
@@ -37,6 +79,27 @@
                 <td>
                     @item.Tipo
                 </td>
+                <td>
+                    @item.Descripcion
+                </td>
+                <td>
+                    @item.FechaAlta.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @item.InstaladorId
+                </td>
+                <td>
+                    <a class="btn btn-primary editar-contrato-btn" 
+                        href="api/Contratos/editar/@item.Id">
+                        Editar
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-danger eliminar-contrato-btn"
+                        @onclick="() => Eliminar(item.Id)">
+                        Eliminar
+                    </a>
+                </td>
             </tr>
         }
         }
@@ -45,7 +108,7 @@
     {
         <p> Error: @Mensaje</p>
     }
-
+    </tbody>
 </table>
 
 @code {
@@ -55,6 +118,12 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await Leer();
+    }
+
+    private async Task Eliminar(int Id)
+    {
+        await http.Delete<Obra>($"api/Contratos/{Id}");
         await Leer();
     }
 

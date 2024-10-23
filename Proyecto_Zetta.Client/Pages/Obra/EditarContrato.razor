@@ -1,9 +1,10 @@
-﻿@page "/api/Contratos/crear"
+﻿@page "/api/Contratos/editar/{contratoId:int}"
 @inject IHttpServicio http
 @inject NavigationManager nav
 
-
-<h3>Nuevo Contrato</h3>
+<h3>
+    Editar Contrato
+</h3>
 
 <EditForm Model="obra" OnValidSubmit="Grabar">
     <DataAnnotationsValidator />
@@ -12,7 +13,7 @@
             Estado
         </label>
         <div>
-            <InputText class="form-control" @bind-Value="@obra.Estado"/>
+            <InputText class="form-control" @bind-Value="@obra.Estado" />
             <ValidationMessage For="@(() => obra.Estado)" />
         </div>
     </div>
@@ -63,7 +64,7 @@
     </div>
     <div class="form-group">
         <label>
-            Id del Instalador 
+            Id del Instalador
         </label>
         <div>
             <InputNumber class="form-control" @bind-Value="@obra.InstaladorId" />
@@ -71,25 +72,42 @@
         </div>
     </div>
 
-    <br/> 
+    <br />
 
     <button class="btn btn-primary" type="submit"> Aceptar </button>
     <button class="btn btn-secondary" @onclick="Cancelar"> Cancelar </button>
 
 </EditForm>
 
-
 @code {
+    [Parameter] public int contratoId { get; set; }
     private Obra obra = new Obra();
 
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
-        obra.FechaAlta = DateTime.Today;
+        await base. OnInitializedAsync();
+        await Mostrar();
     }
+    private async Task Mostrar()
+    {
+        
+        var respuesta = await http.Get<Obra>($"api/Contratos/GetById/{contratoId}");
+
+        if (!respuesta.Error)
+        {
+            obra = respuesta.Respuesta;
+        }
+        else
+        {
+            nav.NavigateTo("/api/Contratos");
+        }
+    }
+    
 
     private async Task Grabar()
     {
-        var httpRespuesta = await http.Post<Obra>("api/Contratos", obra);
+        var httpRespuesta = await http.Put<Obra>($"api/Contratos/{contratoId}", obra);
         if (httpRespuesta.Error)
         {
             var body = httpRespuesta.HttpResponseMessage;
@@ -102,3 +120,4 @@
         nav.NavigateTo("/api/Contratos");
     }
 }
+
