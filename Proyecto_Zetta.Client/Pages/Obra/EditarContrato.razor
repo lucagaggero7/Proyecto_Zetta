@@ -63,11 +63,15 @@
         </div>
     </div>
     <div class="form-group">
-        <label>
-            Id del Instalador
-        </label>
+        <label>Instalador</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@obra.InstaladorId" />
+            <InputSelect class="form-control" @bind-Value="@obra.InstaladorId">
+                <option value="">Seleccione un instalador</option>
+                @foreach (var instalador in listaInstaladores)
+                {
+                    <option value="@instalador.Id">@instalador.Nombre</option>
+                }
+            </InputSelect>
             <ValidationMessage For="@(() => obra.InstaladorId)" />
         </div>
     </div>
@@ -82,11 +86,12 @@
 @code {
     [Parameter] public int contratoId { get; set; }
     private Obra obra = new Obra();
-
+    private List<Instalador> listaInstaladores = new List<Instalador>();
 
     protected override async Task OnInitializedAsync()
     {
         await base. OnInitializedAsync();
+        await CargarInstaladores();
         await Mostrar();
     }
     private async Task Mostrar()
@@ -101,6 +106,15 @@
         else
         {
             nav.NavigateTo("/api/Contratos");
+        }
+    }
+
+    private async Task CargarInstaladores()
+    {
+        var respuesta = await http.Get<List<Instalador>>("api/Instaladores");
+        if (!respuesta.Error)
+        {
+            listaInstaladores = respuesta.Respuesta;
         }
     }
     

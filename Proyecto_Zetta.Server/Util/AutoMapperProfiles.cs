@@ -11,6 +11,10 @@ namespace Proyecto_Zetta.Server.Util
             CreateMap<CrearObraDTO, Obra>();
 
             CreateMap<EditarObraDTO, Obra>();
+
+            CreateMap<CrearInstaladorDTO, Instalador>();
+
+            CreateMap<EditarInstaladorDTO, Instalador>();
         }
     }
 }

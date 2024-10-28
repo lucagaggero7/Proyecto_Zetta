@@ -1,129 +1,124 @@
 ﻿@page "/api/Contratos"
 
 @inject IHttpServicio http
+@inject IJSRuntime js
+@inject AlertaServicio Alerta
 <h3>Lista de Contratos</h3>
 
 <a class="btn btn-primary nuevo-contrato-btn" href="/api/Contratos/crear">Nuevo Contrato</a>
-
 
 <style>
     table {
         width: 100%;
         border-collapse: collapse;
     }
+
     th, td {
         padding: 12px;
         text-align: left;
         border: 1px solid #ddd;
     }
+
     th {
         background-color: #f2f2f2;
     }
 
     .nuevo-contrato-btn {
-        margin-bottom: 20px; /* Añade espacio entre el botón y la tabla */
-        transition: opacity 0.3s ease; /* Transición suave para el efecto de hover */
+        margin-bottom: 20px;
+        transition: opacity 0.3s ease;
     }
 
-    .nuevo-contrato-btn:hover {
-        opacity: 0.8; /* Cambia la opacidad cuando el cursor está encima */
-    }
-
-    .nuevo-contrato-btn {
-        transition: opacity 0.3s ease; /* Transición suave para el efecto de hover */
-    }
-
-    .editar-contrato-btn:hover {
-        opacity: 0.8; /* Cambia la opacidad cuando el cursor está encima */
-    }
-
-    .eliminar-contrato-btn {
-        transition: opacity 0.3s ease; /* Transición suave para el efecto de hover */
-    }
-
-    .eliminar-contrato-btn:hover {
-        opacity: 0.8; /* Cambia la opacidad cuando el cursor está encima */
-    }
+        .nuevo-contrato-btn:hover,
+        .editar-contrato-btn:hover,
+        .eliminar-contrato-btn:hover {
+            opacity: 0.8;
+        }
 </style>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Estado</th>
-            <th>Tipo</th>
-            <th>Descripcion</th>
-            <th>Fecha de Alta</th>
-            <th>Instalador Id</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-    @if(Mensaje =="")
-    {
-    @if (listaContratos == null)
-    {
-            <p>Buscando...</p>
-        }
-        else if(listaContratos.Count == 0)
-        {
-            <p>No existen contratos</p>
-        }
-        else
-    {
-        @foreach (var item in listaContratos)
-        {
-            <tr> 
-                <td>
-                    @item.Estado
-                </td>
-                <td>
-                    @item.Tipo
-                </td>
-                <td>
-                    @item.Descripcion
-                </td>
-                <td>
-                    @item.FechaAlta.ToString("dd/MM/yyyy")
-                </td>
-                <td>
-                    @item.InstaladorId
-                </td>
-                <td>
-                    <a class="btn btn-primary editar-contrato-btn" 
-                        href="api/Contratos/editar/@item.Id">
-                        Editar
-                    </a>
-                </td>
-                <td>
-                    <a class="btn btn-danger eliminar-contrato-btn"
-                        @onclick="() => Eliminar(item.Id)">
-                        Eliminar
-                    </a>
-                </td>
+@if (!string.IsNullOrEmpty(Mensaje))
+{
+    <p>Error: @Mensaje</p>
+}
+else if (listaContratos == null)
+{
+    <p>Buscando...</p>
+}
+else if (listaContratos.Count == 0)
+{
+    <p>No existen contratos</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Fecha de Alta</th>
+                <th>Instalador Id</th>
+                <th>Acciones</th>
             </tr>
-        }
-        }
-    }
-    else
-    {
-        <p> Error: @Mensaje</p>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in listaContratos)
+            {
+                <tr>
+                    <td>@item.Estado</td>
+                    <td>@item.Tipo</td>
+                    <td>@item.Descripcion</td>
+                    <td>@item.FechaAlta.ToString("dd/MM/yyyy")</td>
+                    <td>@item.InstaladorId</td>
+                    <td>
+                        <a class="btn btn-primary editar-contrato-btn" href="api/Contratos/editar/@item.Id">Editar</a>
+                        <a class="btn btn-danger eliminar-contrato-btn" @onclick="() => Eliminar(item.Id)">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    List<Obra> listaContratos;
-    string Mensaje = "";
+    private List<Obra> listaContratos;
+    private string Mensaje = "";
+
+    public class SwalResult
+    {
+        public bool? isConfirmed { get; set; }
+        public bool? isDenied { get; set; }
+        public bool? isDismissed { get; set; }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+
         await Leer();
     }
 
-    private async Task Eliminar(int Id)
+    private async Task Eliminar(int id)
     {
-        await http.Delete<Obra>($"api/Contratos/{Id}");
+        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!");
+
+        if (result?.isConfirmed == true)
+        {
+            await Borrar(id);
+            await js.InvokeVoidAsync("Swal.fire", "mostrarAlerta", "Documento Eliminado");
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Eliminación cancelada.");
+        }
+    }
+
+    private async Task Borrar(int id)
+    {
+        var respuesta = await http.Delete<Obra>($"api/Contratos/{id}");
+        if (respuesta.Error)
+        {
+            Mensaje = "No se pudo borrar el contrato";
+        }
         await Leer();
     }
 

@@ -24,6 +24,7 @@ builder.Services.AddDbContext<Context>(op => op.UseSqlServer("name=conn"));
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IObraRepositorio, ObraRepositorio>();
+builder.Services.AddScoped<IInstaladorRepositorio, InstaladorRepositorio>();
 
 
 
