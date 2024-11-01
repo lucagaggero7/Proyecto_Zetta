@@ -3,81 +3,188 @@
 @inject IHttpServicio http
 @inject IJSRuntime js
 @inject AlertaServicio Alerta
-<h3>Lista de Contratos</h3>
+@inject NavigationManager Navigation
 
-<a class="btn btn-primary nuevo-contrato-btn" href="/api/Contratos/crear">Nuevo Contrato</a>
+<div class="container">
+    <h3 class="title">Lista de Contratos</h3>
+
+    <a class="btn btn-primary nuevo-contrato-btn" href="/api/Contratos/crear">
+        <i class="bi bi-plus-circle"></i> Nuevo Contrato
+    </a>
+
+    @if (!string.IsNullOrEmpty(Mensaje))
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i> Error: @Mensaje
+        </div>
+    }
+    else if (listaContratos == null)
+    {
+        <p class="loading-text"><i class="bi bi-arrow-repeat"></i> Buscando...</p>
+    }
+    else if (listaContratos.Count == 0)
+    {
+        <p class="no-data-text"><i class="bi bi-folder-x"></i> No existen contratos</p>
+    }
+    else
+    {
+        <div class="table-responsive shadow-lg rounded">
+            <table class="table table-hover table-custom">
+                <thead class="table-light">
+                    <tr>
+                        <th>Estado</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>Fecha de Alta</th>
+                        <th>Instalador Id</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listaContratos)
+                    {
+                        <tr>
+                            <td>@item.Estado</td>
+                            <td>@item.Tipo</td>
+                            <td>@item.Descripcion</td>
+                            <td>@item.FechaAlta.ToString("dd/MM/yyyy")</td>
+                            <td>@item.InstaladorId</td>
+                            <td>
+                                <button class="btn btn-edit" @onclick="() => Editar(item.Id)">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </button>
+                                <button class="btn btn-delete" @onclick="() => Eliminar(item.Id)">
+                                    <i class="bi bi-trash3"></i> Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
 
 <style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f2f2f2;
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #343a40;
+        text-align: center;
     }
 
     .nuevo-contrato-btn {
         margin-bottom: 20px;
-        transition: opacity 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        font-weight: 600;
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        color: white;
+        transition: background 0.3s ease, transform 0.2s ease;
     }
 
-        .nuevo-contrato-btn:hover,
-        .editar-contrato-btn:hover,
-        .eliminar-contrato-btn:hover {
-            opacity: 0.8;
+        .nuevo-contrato-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #0056b3, #007bff);
         }
-</style>
 
-@if (!string.IsNullOrEmpty(Mensaje))
-{
-    <p>Error: @Mensaje</p>
-}
-else if (listaContratos == null)
-{
-    <p>Buscando...</p>
-}
-else if (listaContratos.Count == 0)
-{
-    <p>No existen contratos</p>
-}
-else
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Estado</th>
-                <th>Tipo</th>
-                <th>Descripción</th>
-                <th>Fecha de Alta</th>
-                <th>Instalador Id</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in listaContratos)
-            {
-                <tr>
-                    <td>@item.Estado</td>
-                    <td>@item.Tipo</td>
-                    <td>@item.Descripcion</td>
-                    <td>@item.FechaAlta.ToString("dd/MM/yyyy")</td>
-                    <td>@item.InstaladorId</td>
-                    <td>
-                        <a class="btn btn-primary editar-contrato-btn" href="api/Contratos/editar/@item.Id">Editar</a>
-                        <a class="btn btn-danger eliminar-contrato-btn" @onclick="() => Eliminar(item.Id)">Eliminar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    .alert {
+        margin-top: 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+
+    .loading-text, .no-data-text {
+        font-size: 1.2rem;
+        color: #6c757d;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .loading-text i, .no-data-text i {
+            margin-right: 8px;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+        margin-top: 20px;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-custom {
+        border-collapse: collapse;
+    }
+
+    .table th {
+        text-align: center;
+        font-weight: bold;
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table td, .table th {
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background-color: transparent;
+        border: 2px solid #007bff;
+        color: #007bff;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        margin-right: 15px; /* Aumentado para el espaciado entre botones */
+    }
+
+    .btn-delete {
+        background-color: transparent;
+        border: 2px solid #dc3545;
+        color: #dc3545;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-edit:hover {
+        background-color: #007bff;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-delete:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .editar-contrato-btn i, .eliminar-contrato-btn i {
+        margin-right: 5px;
+    }
+</style>
 
 @code {
     private List<Obra> listaContratos;
@@ -92,8 +199,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
         await Leer();
+    }
+
+    private async Task Editar(int id)
+    {
+        Navigation.NavigateTo($"api/Contratos/editar/{id}");
     }
 
     private async Task Eliminar(int id)

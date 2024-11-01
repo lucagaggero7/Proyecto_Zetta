@@ -10,20 +10,17 @@
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
             <NavLink class="nav-link" href="api/Contratos">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Contratos
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="https://localhost:7201/swagger" target="_blank">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Swagger
-            </NavLink>
-        </div>
+    <NavLink class="nav-link" href="https://localhost:7201/swagger" target="_blank">
+        <img src="images/swagger-logo.png" alt="Swagger Logo" style="width: 20px; height: 20px; margin-right: 8px;" />
+        Swagger
+    </NavLink>
+</div>
+
     </nav>
 </div>
 
