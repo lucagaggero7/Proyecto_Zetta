@@ -1,36 +1,32 @@
-﻿using Proyecto_Zetta.DB.Data;
-using Proyecto_Zetta.DB.Data.Entity;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Proyecto_Zetta.Shared.DTO;
-using AutoMapper;
+using Proyecto_Zetta.DB.Data.Entity;
 using Proyecto_Zetta.Server.Repositorio;
-using System.Linq;
-using System.IO.Pipelines;
+using Proyecto_Zetta.Shared.DTO;
 
 namespace Proyecto_Zetta.Server.Controllers
 {
     [ApiController]
-    [Route("api/Contratos")]
-    public class ContratosControllers : ControllerBase
+    [Route("api/Mantenimientos")]
+    public class MantenimientosControllers : ControllerBase
     {
-        private readonly IObraRepositorio repositorio;
+        private readonly IMantenimientoRepositorio repositorio;
         private readonly IMapper mapper;
 
-        public ContratosControllers(IObraRepositorio repositorio ,IMapper mapper)
+        public MantenimientosControllers(IMantenimientoRepositorio repositorio, IMapper mapper)
         {
             this.repositorio = repositorio;
             this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Obra>>> Get()
+        public async Task<ActionResult<List<Mantenimiento>>> Get()
         {
             return await repositorio.Select();
         }
 
         [HttpGet("GetById/{Id:int}")] //api/GetById/2
-        public async Task<ActionResult<Obra>> GetById(int Id)
+        public async Task<ActionResult<Mantenimiento>> GetById(int Id)
         {
             var Verif = await repositorio.SelectById(Id);
             if (Verif == null)
@@ -40,18 +36,18 @@ namespace Proyecto_Zetta.Server.Controllers
             return Verif;
         }
 
-        [HttpGet("GetByEst/{est}")] //api/Obra/GetByEst/Activo
-        public async Task<ActionResult<IEnumerable<Obra>>> GetByEst(string est)
+        [HttpGet("GetByEst/{est}")] //api/Mantenimiento/GetByEst/Activo
+        public async Task<ActionResult<IEnumerable<Mantenimiento>>> GetByEst(string est)
         {
-            var obras = await repositorio.SelectByEst(est);
-            if (obras == null || !obras.Any()) // Verifica que obras no sea nulo y que tenga elementos
+            var seguimiento = await repositorio.SelectByEst(est);
+            if (seguimiento == null || !seguimiento.Any()) // Verifica que Seguimiento no sea nulo y que tenga elementos
             {
                 return NotFound();
             }
-            return Ok(obras);
+            return Ok(seguimiento);
         }
 
-        [HttpGet("existe/{id:int}")] //api/Obras/existe/2
+        [HttpGet("existe/{id:int}")] //api/Mantenimiento/existe/2
         public async Task<ActionResult<bool>> Existe(int id)
         {
             var existe = await repositorio.Existe(id);
@@ -59,7 +55,7 @@ namespace Proyecto_Zetta.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(CrearObraDTO entidadDTO)
+        public async Task<ActionResult<int>> Post(CrearMantenimientoDTO entidadDTO)
         {
             try
             {
@@ -73,7 +69,7 @@ namespace Proyecto_Zetta.Server.Controllers
                 //entidad.AnexarServicio = entidadDTO.AnexarServicio;
                 //entidad.InstaladorId = entidadDTO.InstaladorId;
 
-                Obra entidad = mapper.Map<Obra>(entidadDTO);
+                Mantenimiento entidad = mapper.Map<Mantenimiento>(entidadDTO);
 
 
                 return await repositorio.Insert(entidad);
@@ -84,12 +80,12 @@ namespace Proyecto_Zetta.Server.Controllers
             }
         }
 
-        [HttpPut("{Id:int}")] //api/Obra/2
-        public async Task<ActionResult> Put(int Id, [FromBody] EditarObraDTO entidadDTO)
+        [HttpPut("{Id:int}")] //api/Mantenimiento/2
+        public async Task<ActionResult> Put(int Id, [FromBody] EditarMantenimientoDTO entidadDTO)
         {
             try
             {
-                Obra entidad = mapper.Map<Obra>(entidadDTO);
+                Mantenimiento entidad = mapper.Map<Mantenimiento>(entidadDTO);
 
                 await repositorio.Update(entidad.Id, entidad);
                 return Ok();
@@ -101,16 +97,16 @@ namespace Proyecto_Zetta.Server.Controllers
                 return BadRequest(e.InnerException.Message);
             }
         }
-            
 
-        [HttpDelete("{id:int}")] //api/Obra/2
+
+        [HttpDelete("{id:int}")] //api/Mantenimiento/2
         public async Task<ActionResult> Delete(int id)
         {
             var resp = await repositorio.Drop(id);
 
-            if(!resp)
+            if (!resp)
             {
-                return BadRequest("La obra no se pudo borrar");
+                return BadRequest("El Mantenimiento no se pudo borrar");
 
             }
             return Ok();

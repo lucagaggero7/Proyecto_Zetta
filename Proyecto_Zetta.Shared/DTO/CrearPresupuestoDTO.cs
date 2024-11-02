@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Proyecto_Zetta.DB.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Proyecto_Zetta.DB.Data.Entity
+namespace Proyecto_Zetta.Shared.DTO
 {
-    public class Presupuesto : EntityBase
+    public class CrearPresupuestoDTO
     {
         [Required(ErrorMessage = "El estado es obligatorio.")]
         [MaxLength(12, ErrorMessage = "Maximo numero de caracteres {1}.")]
@@ -30,12 +30,12 @@ namespace Proyecto_Zetta.DB.Data.Entity
 
         //claves foraneas
         public int FormadePagoId { get; set; }
-        public required FormadePago FormadePago { get; set; }
+        //public required FormadePago FormadePago { get; set; }
         public int ObraId { get; set; }
-        public required Obra Obra { get; set; }
+        //public required Obra Obra { get; set; }
         public int ItemTipoId { get; set; }
-        public required ItemTipo ItemTipo { get; set; }
-        
+        //public required ItemTipo ItemTipo { get; set; }
+
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proyecto_Zetta.DB.Data.Entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,19 +13,13 @@ namespace Proyecto_Zetta.Shared.DTO
 
         [Required(ErrorMessage = "El estado es obligatorio.")]
         [MaxLength(12, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public string Estado { get; set; }
-
-        [Required(ErrorMessage = "El tipo de obra es obligatorio.")]
-        [MaxLength(40, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public string Tipo { get; set; }
+        public required string Estado { get; set; }
 
         [MaxLength(150, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public string? Descripcion { get; set; }
 
-        [MaxLength(250, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public string? Materiales { get; set; }
-
         [Required(ErrorMessage = "La fecha de alta es obligatoria.")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime FechaAlta { get; set; }
 
         [MaxLength(45, ErrorMessage = "Maximo numero de caracteres {1}.")]
@@ -32,5 +27,8 @@ namespace Proyecto_Zetta.Shared.DTO
 
         //claves foraneas 
         public int InstaladorId { get; set; }
+        //public Instalador Instalador { get; set; }
+        public int ClienteId { get; set; }
+        //public Cliente Cliente { get; set; } 
     }
 }

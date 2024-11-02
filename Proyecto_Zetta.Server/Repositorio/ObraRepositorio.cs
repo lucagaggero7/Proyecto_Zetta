@@ -14,11 +14,11 @@ namespace Proyecto_Zetta.Server.Repositorio
             this.context = context;
         }
 
-        public async Task<Obra> SelectByEst(string est)
+        public async Task<IEnumerable<Obra>> SelectByEst(string est)
         {
-            Obra? Verif = await context.Obras.FirstOrDefaultAsync(x => x.Estado == est);
-
-            return Verif;
+            return await context.Obras
+                .Where(o => o.Estado == est) // Filtra las obras por estado
+                .ToListAsync(); // Convierte el resultado a una lista
         }
 
     }

@@ -1,15 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Proyecto_Zetta.DB.Data.Entity
+namespace Proyecto_Zetta.Shared.DTO
 {
-    [Index(nameof(Apellido), nameof(Nombre), Name = "Cliente_Apellido_Nombre", IsUnique = false)]
-    public class Cliente : EntityBase
+    public class CrearClienteDTO
     {
 
         [Required(ErrorMessage = "El nombre es obligatorio.")]

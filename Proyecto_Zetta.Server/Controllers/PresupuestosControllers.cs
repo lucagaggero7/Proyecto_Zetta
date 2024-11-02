@@ -11,26 +11,26 @@ using System.IO.Pipelines;
 namespace Proyecto_Zetta.Server.Controllers
 {
     [ApiController]
-    [Route("api/Contratos")]
-    public class ContratosControllers : ControllerBase
+    [Route("api/Presupuestos")]
+    public class PresupuestosControllers : ControllerBase
     {
-        private readonly IObraRepositorio repositorio;
+        private readonly IPresupuestoRepositorio repositorio;
         private readonly IMapper mapper;
 
-        public ContratosControllers(IObraRepositorio repositorio ,IMapper mapper)
+        public PresupuestosControllers(IPresupuestoRepositorio repositorio, IMapper mapper)
         {
             this.repositorio = repositorio;
             this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Obra>>> Get()
+        public async Task<ActionResult<List<Presupuesto>>> Get()
         {
             return await repositorio.Select();
         }
 
         [HttpGet("GetById/{Id:int}")] //api/GetById/2
-        public async Task<ActionResult<Obra>> GetById(int Id)
+        public async Task<ActionResult<Presupuesto>> GetById(int Id)
         {
             var Verif = await repositorio.SelectById(Id);
             if (Verif == null)
@@ -40,8 +40,8 @@ namespace Proyecto_Zetta.Server.Controllers
             return Verif;
         }
 
-        [HttpGet("GetByEst/{est}")] //api/Obra/GetByEst/Activo
-        public async Task<ActionResult<IEnumerable<Obra>>> GetByEst(string est)
+        [HttpGet("GetByEst/{est}")] //api/Presupuesto/GetByEst/Activo
+        public async Task<ActionResult<IEnumerable<Presupuesto>>> GetByEst(string est)
         {
             var obras = await repositorio.SelectByEst(est);
             if (obras == null || !obras.Any()) // Verifica que obras no sea nulo y que tenga elementos
@@ -51,7 +51,7 @@ namespace Proyecto_Zetta.Server.Controllers
             return Ok(obras);
         }
 
-        [HttpGet("existe/{id:int}")] //api/Obras/existe/2
+        [HttpGet("existe/{id:int}")] //api/Presupuesto/existe/2
         public async Task<ActionResult<bool>> Existe(int id)
         {
             var existe = await repositorio.Existe(id);
@@ -59,7 +59,7 @@ namespace Proyecto_Zetta.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(CrearObraDTO entidadDTO)
+        public async Task<ActionResult<int>> Post(CrearPresupuestoDTO entidadDTO)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace Proyecto_Zetta.Server.Controllers
                 //entidad.AnexarServicio = entidadDTO.AnexarServicio;
                 //entidad.InstaladorId = entidadDTO.InstaladorId;
 
-                Obra entidad = mapper.Map<Obra>(entidadDTO);
+                Presupuesto entidad = mapper.Map<Presupuesto>(entidadDTO);
 
 
                 return await repositorio.Insert(entidad);
@@ -84,12 +84,12 @@ namespace Proyecto_Zetta.Server.Controllers
             }
         }
 
-        [HttpPut("{Id:int}")] //api/Obra/2
-        public async Task<ActionResult> Put(int Id, [FromBody] EditarObraDTO entidadDTO)
+        [HttpPut("{Id:int}")] //api/Presupuesto/2
+        public async Task<ActionResult> Put(int Id, [FromBody] EditarPresupuestoDTO entidadDTO)
         {
             try
             {
-                Obra entidad = mapper.Map<Obra>(entidadDTO);
+                Presupuesto entidad = mapper.Map<Presupuesto>(entidadDTO);
 
                 await repositorio.Update(entidad.Id, entidad);
                 return Ok();
@@ -101,16 +101,16 @@ namespace Proyecto_Zetta.Server.Controllers
                 return BadRequest(e.InnerException.Message);
             }
         }
-            
 
-        [HttpDelete("{id:int}")] //api/Obra/2
+
+        [HttpDelete("{id:int}")] //api/Presupuesto/2
         public async Task<ActionResult> Delete(int id)
         {
             var resp = await repositorio.Drop(id);
 
-            if(!resp)
+            if (!resp)
             {
-                return BadRequest("La obra no se pudo borrar");
+                return BadRequest("El Presupuesto no se pudo borrar");
 
             }
             return Ok();

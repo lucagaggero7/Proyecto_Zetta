@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Proyecto_Zetta.DB.Data.Entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Proyecto_Zetta.DB.Data.Entity
+namespace Proyecto_Zetta.Shared.DTO
 {
-    public class Mantenimiento : EntityBase
+    public class CrearMantenimientoDTO
     {
         [Required(ErrorMessage = "El estado es obligatorio.")]
         [MaxLength(12, ErrorMessage = "Maximo numero de caracteres {1}.")]
@@ -21,9 +22,9 @@ namespace Proyecto_Zetta.DB.Data.Entity
 
         //claves foraneas
         public int PresupuestoId { get; set; }
-        public required Presupuesto Presupuesto { get; set; }
+        //public required Presupuesto Presupuesto { get; set; }
 
         public int SeguimientoId { get; set; }
-        public required Seguimiento Seguimiento { get; set; }
+        //public required Seguimiento Seguimiento { get; set; }
     }
 }

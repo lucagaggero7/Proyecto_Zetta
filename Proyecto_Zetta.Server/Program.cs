@@ -25,8 +25,12 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IObraRepositorio, ObraRepositorio>();
 builder.Services.AddScoped<IInstaladorRepositorio, InstaladorRepositorio>();
-
-
+builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
+builder.Services.AddScoped<ISeguimientoRepositorio, SeguimientoRepositorio>();
+builder.Services.AddScoped<IFormadePagoRepositorio, FormadePagoRepositorio>();
+builder.Services.AddScoped<IMaterialRepositorio, MaterialRepositorio>();
+builder.Services.AddScoped<IMantenimientoRepositorio, MantenimientoRepositorio>();
+builder.Services.AddScoped<IItemTipoRepositorio, ItemTipoRepositorio>();
 
 var app = builder.Build();
 

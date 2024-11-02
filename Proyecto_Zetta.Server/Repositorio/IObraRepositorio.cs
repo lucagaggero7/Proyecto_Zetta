@@ -4,6 +4,6 @@ namespace Proyecto_Zetta.Server.Repositorio
 {
     public interface IObraRepositorio : IRepositorio<Obra>
     {
-        Task<Obra> SelectByEst(string cod);
+        Task<IEnumerable<Obra>> SelectByEst(string est);
     }
 }

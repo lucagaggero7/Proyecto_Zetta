@@ -5,10 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Proyecto_Zetta.DB.Data.Entity
+namespace Proyecto_Zetta.Shared.DTO
 {
-    public class Mantenimiento : EntityBase
+    public class EditarMantenimientoDTO
     {
+        [Required(ErrorMessage = "El Id del seguimiento a modificar es obligatorio")]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "El estado es obligatorio.")]
         [MaxLength(12, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public required string Estado { get; set; }
@@ -21,9 +24,9 @@ namespace Proyecto_Zetta.DB.Data.Entity
 
         //claves foraneas
         public int PresupuestoId { get; set; }
-        public required Presupuesto Presupuesto { get; set; }
+        //public required Presupuesto Presupuesto { get; set; }
 
         public int SeguimientoId { get; set; }
-        public required Seguimiento Seguimiento { get; set; }
+        //public required Seguimiento Seguimiento { get; set; }
     }
 }

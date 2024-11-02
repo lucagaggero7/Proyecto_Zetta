@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Proyecto_Zetta.DB.Data.Entity
 {
-    public class Forma_de_Pago : EntityBase
+    public class FormadePago : EntityBase
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(30, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public string Nombre { get; set; }
+        public required string Nombre { get; set; }
     }
 }
