@@ -1,8 +1,8 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "./RailwayDemoDeployment/Dockerfile"
+dockerfilePath = "./Dockerfile"
 
 [deploy]
-startCommand = "./RailwayDemoDeployment"
+startCommand = "dotnet Proyecto_Zetta.Server.dll"
 restartPolicyType = "always"
 healthcheckPath = "/health"
