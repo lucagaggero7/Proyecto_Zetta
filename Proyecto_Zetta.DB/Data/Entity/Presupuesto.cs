@@ -12,11 +12,11 @@ namespace Proyecto_Zetta.DB.Data.Entity
     {
         [Required(ErrorMessage = "El estado es obligatorio.")]
         [MaxLength(12, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Estado { get; set; }
+        public string Estado { get; set; }
 
         [Required(ErrorMessage = "El tipo es obligatorio.")]
         [MaxLength(45, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Tipo { get; set; }
+        public string Tipo { get; set; }
 
         public bool MaterialesIncl { get; set; }
 
@@ -30,11 +30,11 @@ namespace Proyecto_Zetta.DB.Data.Entity
 
         //claves foraneas
         public int FormadePagoId { get; set; }
-        public required FormadePago FormadePago { get; set; }
+        public FormadePago FormadePago { get; set; }
         public int ObraId { get; set; }
-        public required Obra Obra { get; set; }
+        public Obra Obra { get; set; }
         public int ItemTipoId { get; set; }
-        public required ItemTipo ItemTipo { get; set; }
+        public ItemTipo ItemTipo { get; set; }
         
 
     }

@@ -10,9 +10,9 @@ namespace Proyecto_Zetta.DB.Data.Entity
     {
         //claves foraneas
         public int ItemTipoId { get; set; }
-        public required ItemTipo ItemTipo { get; set; }
+        public ItemTipo ItemTipo { get; set; }
 
         public int MaterialId { get; set; }
-        public required Material Material { get; set; }
+        public Material Material { get; set; }
     }
 }

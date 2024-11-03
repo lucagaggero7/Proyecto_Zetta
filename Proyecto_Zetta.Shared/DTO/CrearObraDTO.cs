@@ -13,7 +13,7 @@ namespace Proyecto_Zetta.Shared.DTO
 
         [Required(ErrorMessage = "El estado es obligatorio.")]
         [MaxLength(12, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Estado { get; set; }
+        public string Estado { get; set; }
 
         [MaxLength(150, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public string? Descripcion { get; set; }
@@ -29,6 +29,6 @@ namespace Proyecto_Zetta.Shared.DTO
         public int InstaladorId { get; set; }
         //public Instalador Instalador { get; set; }
         public int ClienteId { get; set; }
-        //public Cliente Cliente { get; set; } 
+        //public Cliente Cliente { get; set; }
     }
 }

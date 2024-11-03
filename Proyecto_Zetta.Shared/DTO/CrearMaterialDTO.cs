@@ -12,11 +12,11 @@ namespace Proyecto_Zetta.Shared.DTO
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(30, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Nombre { get; set; }
+        public string Nombre { get; set; }
 
         [Required(ErrorMessage = "La unidad de medida es obligatoria.")]
         [MaxLength(30, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string UnidadMedida { get; set; }
+        public string UnidadMedida { get; set; }
 
         [Required(ErrorMessage = "El precio del material es obligatorio.")]
         public long Precio { get; set; }

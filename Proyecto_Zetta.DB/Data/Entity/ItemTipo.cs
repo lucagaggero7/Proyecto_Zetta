@@ -8,7 +8,7 @@ namespace Proyecto_Zetta.DB.Data.Entity
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(60, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Nombre { get; set; }
+        public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El precio de insumos es obligatorio.")]
         public long Insumos { get; set; }

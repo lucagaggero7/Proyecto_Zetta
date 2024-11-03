@@ -11,7 +11,7 @@ namespace Proyecto_Zetta.DB.Data.Entity
     {
         [Required(ErrorMessage = "El estado es obligatorio.")]
         [MaxLength(12, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Estado { get; set; }
+        public string Estado { get; set; }
 
         [MaxLength(100, ErrorMessage = "Maximo numero de caracteres {1}.")]
         public string? Descripcion { get; set; }
@@ -20,7 +20,7 @@ namespace Proyecto_Zetta.DB.Data.Entity
 
         //clave foranea
         public int ObraId { get; set; }
-        public required Obra Obra { get; set; }
+        public Obra Obra { get; set; }
 
     }
 }

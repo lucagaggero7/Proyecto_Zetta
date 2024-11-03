@@ -14,6 +14,6 @@ namespace Proyecto_Zetta.Shared.DTO
 
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(30, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Nombre { get; set; }
+        public string Nombre { get; set; }
     }
 }

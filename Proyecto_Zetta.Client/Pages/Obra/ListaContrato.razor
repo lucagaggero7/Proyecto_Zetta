@@ -1,4 +1,4 @@
-﻿@* @page "/api/Contratos"
+﻿@page "/api/Contratos"
 
 @inject IHttpServicio http
 @inject IJSRuntime js
@@ -33,10 +33,10 @@
                 <thead class="table-light">
                     <tr>
                         <th>Estado</th>
-                        <th>Tipo</th>
                         <th>Descripción</th>
                         <th>Fecha de Alta</th>
-                        <th>Instalador Id</th>
+                        <th>Instalador</th>
+                        <th>Cliente</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -45,10 +45,10 @@
                     {
                         <tr>
                             <td>@item.Estado</td>
-                            <td>@item.Tipo</td>
                             <td>@item.Descripcion</td>
                             <td>@item.FechaAlta.ToString("dd/MM/yyyy")</td>
-                            <td>@item.InstaladorId</td>
+                            <td>@(nombresInstaladores.ContainsKey(item.InstaladorId) ? nombresInstaladores[item.InstaladorId] : "Desconocido")</td>
+                            <td>@(nombresClientes.ContainsKey(item.ClienteId) ? nombresClientes[item.ClienteId] : "Desconocido")</td>
                             <td>
                                 <button class="btn btn-edit" @onclick="() => Editar(item.Id)">
                                     <i class="bi bi-pencil-square"></i> Editar
@@ -94,10 +94,10 @@
         transition: background 0.3s ease, transform 0.2s ease;
     }
 
-        .nuevo-contrato-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(45deg, #0056b3, #007bff);
-        }
+    .nuevo-contrato-btn:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(45deg, #0056b3, #007bff);
+    }
 
     .alert {
         margin-top: 10px;
@@ -115,9 +115,9 @@
         justify-content: center;
     }
 
-        .loading-text i, .no-data-text i {
-            margin-right: 8px;
-        }
+    .loading-text i, .no-data-text i {
+        margin-right: 8px;
+    }
 
     .table-responsive {
         overflow-x: auto;
@@ -141,6 +141,9 @@
     .table td, .table th {
         padding: 12px 15px;
         vertical-align: middle;
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        overflow: hidden; /* Oculta el desbordamiento */
+        text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
     }
 
     .table-hover tbody tr:hover {
@@ -156,7 +159,7 @@
         border-radius: 4px;
         font-weight: bold;
         transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-        margin-right: 15px; /* Aumentado para el espaciado entre botones */
+        margin-right: 15px;
     }
 
     .btn-delete {
@@ -180,14 +183,12 @@
         color: white;
         transform: translateY(-2px);
     }
-
-    .editar-contrato-btn i, .eliminar-contrato-btn i {
-        margin-right: 5px;
-    }
 </style>
 
 @code {
     private List<Obra> listaContratos;
+    private Dictionary<int, string> nombresClientes = new();
+    private Dictionary<int, string> nombresInstaladores = new();
     private string Mensaje = "";
 
     public class SwalResult
@@ -200,6 +201,45 @@
     protected override async Task OnInitializedAsync()
     {
         await Leer();
+    }
+
+    private async Task Leer()
+    {
+        var resp = await http.Get<List<Obra>>("api/Contratos");
+        if (!resp.Error)
+        {
+            listaContratos = resp.Respuesta;
+            await CargarNombresClientes();
+            await CargarNombresInstaladores();
+        }
+        else
+        {
+            Mensaje = await resp.ObtenerError();
+        }
+    }
+
+    private async Task CargarNombresClientes()
+    {
+        var resp = await http.Get<List<Cliente>>("api/Clientes"); // Cambia el endpoint según tu API
+        if (!resp.Error)
+        {
+            foreach (var cliente in resp.Respuesta)
+            {
+                nombresClientes[cliente.Id] = $"{cliente.Nombre} {cliente.Apellido}";
+            }
+        }
+    }
+
+    private async Task CargarNombresInstaladores()
+    {
+        var resp = await http.Get<List<Instalador>>("api/Instaladores"); // Cambia el endpoint según tu API
+        if (!resp.Error)
+        {
+            foreach (var instalador in resp.Respuesta)
+            {
+                nombresInstaladores[instalador.Id] = $"{instalador.Nombre} {instalador.Apellido}";
+            }
+        }
     }
 
     private async Task Editar(int id)
@@ -232,18 +272,4 @@
         }
         await Leer();
     }
-
-    private async Task Leer()
-    {
-        var resp = await http.Get<List<Obra>>("api/Contratos");
-        if (!resp.Error)
-        {
-            listaContratos = resp.Respuesta;
-        }
-        else
-        {
-            Mensaje = await resp.ObtenerError();
-        }
-    }
 }
- *@

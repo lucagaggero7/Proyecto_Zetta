@@ -50,29 +50,53 @@ namespace Proyecto_Zetta.Server.Controllers
             {
                 ItemTipo entidad = mapper.Map<ItemTipo>(entidadDTO);
 
+                // Si el DTO incluye una lista de IDs de Materiales, puedes agregarlos
+                if (entidadDTO.MaterialesIds != null)
+                {
+                    foreach (var materialId in entidadDTO.MaterialesIds)
+                    {
+                        entidad.ItemTipoMateriales.Add(new ItemTipoMaterial { MaterialId = materialId });
+                    }
+                }
+
                 return await repositorio.Insert(entidad);
             }
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest(e.InnerException?.Message ?? e.Message);
             }
         }
 
-        [HttpPut("{Id:int}")] //api/ItemTipo/2
+
+        [HttpPut("{Id:int}")]
         public async Task<ActionResult> Put(int Id, [FromBody] EditarItemTipoDTO entidadDTO)
         {
             try
             {
-                ItemTipo entidad = mapper.Map<ItemTipo>(entidadDTO);
+                ItemTipo entidad = await repositorio.SelectById(Id);
+                if (entidad == null)
+                {
+                    return NotFound();
+                }
 
-                await repositorio.Update(entidad.Id, entidad);
+                mapper.Map(entidadDTO, entidad);
+
+                // Limpia las relaciones existentes de Materiales si se envía una nueva lista
+                entidad.ItemTipoMateriales.Clear();
+                if (entidadDTO.MaterialesIds != null)
+                {
+                    foreach (var materialId in entidadDTO.MaterialesIds)
+                    {
+                        entidad.ItemTipoMateriales.Add(new ItemTipoMaterial { MaterialId = materialId });
+                    }
+                }
+
+                await repositorio.Update(Id, entidad);
                 return Ok();
-                //return Ok(new { message = "Actualización exitosa" });
             }
-
             catch (Exception e)
             {
-                return BadRequest(e.InnerException.Message);
+                return BadRequest(e.InnerException?.Message ?? e.Message);
             }
         }
 

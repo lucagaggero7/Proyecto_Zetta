@@ -12,7 +12,7 @@ namespace Proyecto_Zetta.Shared.DTO
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(60, ErrorMessage = "Maximo numero de caracteres {1}.")]
-        public required string Nombre { get; set; }
+        public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El precio de insumos es obligatorio.")]
         public long Insumos { get; set; }
@@ -27,5 +27,7 @@ namespace Proyecto_Zetta.Shared.DTO
         //{
         //    ItemTipoMateriales = new List<ItemTipoMaterial>();
         //}
+
+        public List<int> MaterialesIds { get; set; }
     }
 }
