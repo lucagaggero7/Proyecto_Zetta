@@ -1,7 +1,8 @@
 [build]
 builder = "dockerfile"
+dockerfilePath = "Proyecto_Zetta.Server/Dockerfile"
 
 [deploy]
 startCommand = "dotnet Proyecto_Zetta.Server.dll"
 restartPolicyType = "always"
-healthcheckPath = "/health"  # Asegúrate de tener este endpoint en tu API
+healthcheckPath = "/health"
