@@ -5,6 +5,14 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//DEPLOY CONFIG
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8888";
+builder.WebHost.UseUrls($"http:// *: {port}");
+
+builder.Services.AddHealthChecks();
+//
+
+
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(
@@ -33,6 +41,11 @@ builder.Services.AddScoped<IMantenimientoRepositorio, MantenimientoRepositorio>(
 builder.Services.AddScoped<IItemTipoRepositorio, ItemTipoRepositorio>();
 
 var app = builder.Build();
+
+//DEPLOY CONFIG
+app.UseHealthChecks("/health");
+//
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
