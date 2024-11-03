@@ -12,7 +12,7 @@ COPY ../Proyecto_Zetta.sln ./
 COPY ../Proyecto_Zetta.Client/Proyecto_Zetta.Client.csproj ../Proyecto_Zetta.Client/
 COPY ../Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj .
 COPY ../Proyecto_Zetta.Shared/Proyecto_Zetta.Shared.csproj ../Proyecto_Zetta.Shared/
-RUN dotnet restore
+RUN dotnet restore --verbosity diag
 
 # Copia todos los archivos del proyecto y compila la aplicación
 COPY .. .
