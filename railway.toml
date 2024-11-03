@@ -1,6 +1,6 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "./Dockerfile"
+dockerfilePath = "./Proyecto_Zetta.Server/Dockerfile"
 
 [deploy]
 startCommand = "dotnet Proyecto_Zetta.Server.dll"

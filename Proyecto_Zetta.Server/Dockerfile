@@ -7,15 +7,15 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia los archivos de solución y restaura las dependencias
-COPY Proyecto_Zetta.sln ./
-COPY Proyecto_Zetta.Client/Proyecto_Zetta.Client.csproj Proyecto_Zetta.Client/
-COPY Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj Proyecto_Zetta.Server/
-COPY Proyecto_Zetta.Shared/Proyecto_Zetta.Shared.csproj Proyecto_Zetta.Shared/
+# Copia los archivos de solución y los proyectos individuales para restaurar dependencias
+COPY ../Proyecto_Zetta.sln ./
+COPY ../Proyecto_Zetta.Client/Proyecto_Zetta.Client.csproj ../Proyecto_Zetta.Client/
+COPY ../Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj .
+COPY ../Proyecto_Zetta.Shared/Proyecto_Zetta.Shared.csproj ../Proyecto_Zetta.Shared/
 RUN dotnet restore
 
-# Copia todos los archivos y compila la aplicación
-COPY . .
+# Copia todos los archivos del proyecto y compila la aplicación
+COPY .. .
 WORKDIR /src/Proyecto_Zetta.Server
 RUN dotnet publish -c Release -o /app/out
 
