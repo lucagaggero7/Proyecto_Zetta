@@ -5,32 +5,39 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//DEPLOY CONFIG
+// DEPLOY CONFIG
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8888";
-builder.WebHost.UseUrls($"http:// *: {port}");
+builder.WebHost.UseUrls($"http://*:{port}");
 
 builder.Services.AddHealthChecks();
 //
 
-
 // Add services to the container.
-
 builder.Services.AddControllers().AddJsonOptions(
-x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+    x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Swagger/OpenAPI configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// CORS configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                         .AllowAnyMethod()
+                         .AllowAnyHeader());
+});
 
-builder.Services.AddDbContext<Context>(op => op.UseSqlServer("name=conn"));
-
-
+// Database context configuration
+builder.Services.AddDbContext<Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("conn"))); // Usar el connection string del archivo de configuración
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+// Repositories
 builder.Services.AddScoped<IObraRepositorio, ObraRepositorio>();
 builder.Services.AddScoped<IInstaladorRepositorio, InstaladorRepositorio>();
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
@@ -42,10 +49,12 @@ builder.Services.AddScoped<IItemTipoRepositorio, ItemTipoRepositorio>();
 
 var app = builder.Build();
 
-//DEPLOY CONFIG
+// DEPLOY CONFIG
 app.UseHealthChecks("/health");
 //
 
+// Configure CORS
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -55,7 +64,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseRouting();
