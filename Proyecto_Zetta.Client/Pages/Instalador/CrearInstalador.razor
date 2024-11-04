@@ -1,0 +1,148 @@
+﻿@page "/api/Instaladores/crear"
+@using Proyecto_Zetta.Shared.DTO
+@inject IHttpServicio http
+@inject NavigationManager nav
+
+<div class="container">
+    <h3 class="title">Nuevo Instalador</h3>
+
+    <EditForm Model="instalador" OnValidSubmit="Grabar">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label>Activo</label>
+            <div class="checkbox-container">
+                <InputCheckbox @bind-Value="@instalador.Activo" />
+                <ValidationMessage For="@(() => instalador.Activo)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Actividad</label>
+            <InputText class="form-control" @bind-Value="@instalador.Actividad" />
+            <ValidationMessage For="@(() => instalador.Actividad)" />
+        </div>
+
+        <div class="form-group">
+            <label>Nombre</label>
+            <InputText class="form-control" @bind-Value="@instalador.Nombre" />
+            <ValidationMessage For="@(() => instalador.Nombre)" />
+        </div>
+
+        <div class="form-group">
+            <label>Apellido</label>
+            <InputText class="form-control" @bind-Value="@instalador.Apellido" />
+            <ValidationMessage For="@(() => instalador.Apellido)" />
+        </div>
+
+        <div class="form-group">
+            <label>DNI</label>
+            <InputNumber class="form-control" @bind-Value="@instalador.Dni" />
+            <ValidationMessage For="@(() => instalador.Dni)" />
+        </div>
+
+        <div class="form-group">
+            <label>Teléfono</label>
+            <InputNumber class="form-control" @bind-Value="@instalador.Telefono" />
+            <ValidationMessage For="@(() => instalador.Telefono)" />
+        </div>
+
+        <div class="form-group">
+            <label>Descripción</label>
+            <InputText class="form-control" @bind-Value="@instalador.Descripcion" />
+            <ValidationMessage For="@(() => instalador.Descripcion)" />
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" type="submit">Aceptar</button>
+            <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #343a40;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        accent-color: #007bff; 
+        border: 2px solid #007bff;
+        border-radius: 4px;
+    }
+
+    .checkbox-container label {
+        font-weight: bold;
+        color: #343a40;
+        font-size: 1.1rem;
+    }
+</style>
+
+@code {
+    private CrearInstaladorDTO instalador = new CrearInstaladorDTO();
+
+    private async Task Grabar()
+    {
+        var httpRespuesta = await http.Post<CrearInstaladorDTO>("api/Instaladores", instalador);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        nav.NavigateTo("/api/Instaladores");
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/api/Instaladores");
+    }
+}

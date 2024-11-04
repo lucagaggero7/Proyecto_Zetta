@@ -29,5 +29,7 @@ namespace Proyecto_Zetta.Shared.DTO
         [Required(ErrorMessage = "El numero de telefono es obligatorio.")]
         public long Telefono { get; set; }
 
+        [MaxLength(100, ErrorMessage = "Maximo numero de caracteres {1}.")]
+        public string? Descripcion { get; set; }
     }
 }

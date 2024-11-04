@@ -1,4 +1,4 @@
-﻿@page "/api/Contratos"
+﻿@page "/api/Instaladores"
 
 @inject IHttpServicio http
 @inject IJSRuntime js
@@ -6,10 +6,10 @@
 @inject NavigationManager Navigation
 
 <div class="container">
-    <h3 class="title">Lista de Contratos</h3>
+    <h3 class="title">Lista de Instaladores</h3>
 
-    <a class="btn btn-primary nuevo-contrato-btn" href="/api/Contratos/crear">
-        <i class="bi bi-plus-circle"></i> Nuevo Contrato
+    <a class="btn btn-primary nuevo-instalador-btn" href="/api/Instaladores/crear">
+        <i class="bi bi-plus-circle"></i> Nuevo Instalador
     </a>
 
     @if (!string.IsNullOrEmpty(Mensaje))
@@ -18,13 +18,13 @@
             <i class="bi bi-exclamation-triangle-fill"></i> Error: @Mensaje
         </div>
     }
-    else if (listaContratos == null)
+    else if (listaInstaladores == null)
     {
         <p class="loading-text"><i class="bi bi-arrow-repeat"></i> Buscando...</p>
     }
-    else if (listaContratos.Count == 0)
+    else if (listaInstaladores.Count == 0)
     {
-        <p class="no-data-text"><i class="bi bi-folder-x"></i> No existen contratos</p>
+        <p class="no-data-text"><i class="bi bi-folder-x"></i> No existen instaladores</p>
     }
     else
     {
@@ -32,23 +32,21 @@
             <table class="table table-hover table-custom">
                 <thead class="table-light">
                     <tr>
-                        <th>Estado</th>
-                        <th>Descripción</th>
-                        <th>Fecha de Alta</th>
-                        <th>Instalador</th>
-                        <th>Cliente</th>
+                        <th>Activo</th>
+                        <th>Actividad</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in listaContratos)
+                    @foreach (var item in listaInstaladores)
                     {
                         <tr>
-                            <td>@item.Estado</td>
-                            <td>@item.Descripcion</td>
-                            <td>@item.FechaAlta.ToString("dd/MM/yyyy")</td>
-                            <td>@(nombresInstaladores.ContainsKey(item.InstaladorId) ? nombresInstaladores[item.InstaladorId] : "Desconocido")</td>
-                            <td>@(nombresClientes.ContainsKey(item.ClienteId) ? nombresClientes[item.ClienteId] : "Desconocido")</td>
+                            <td>@(item.Activo ? "Sí" : "No")</td>
+                            <td>@item.Actividad</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Apellido</td>
                             <td>
                                 <button class="btn btn-edit" @onclick="() => Editar(item.Id)">
                                     <i class="bi bi-pencil-square"></i> Editar
@@ -62,6 +60,7 @@
                 </tbody>
             </table>
         </div>
+
     }
 </div>
 
@@ -83,7 +82,7 @@
         text-align: center;
     }
 
-    .nuevo-contrato-btn {
+    .nuevo-instalador-btn {
         margin-bottom: 20px;
         display: inline-flex;
         align-items: center;
@@ -94,10 +93,10 @@
         transition: background 0.3s ease, transform 0.2s ease;
     }
 
-    .nuevo-contrato-btn:hover {
-        transform: translateY(-2px);
-        background: linear-gradient(45deg, #0056b3, #007bff);
-    }
+        .nuevo-instalador-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #0056b3, #007bff);
+        }
 
     .alert {
         margin-top: 10px;
@@ -115,9 +114,9 @@
         justify-content: center;
     }
 
-    .loading-text i, .no-data-text i {
-        margin-right: 8px;
-    }
+        .loading-text i, .no-data-text i {
+            margin-right: 8px;
+        }
 
     .table-responsive {
         overflow-x: auto;
@@ -183,12 +182,31 @@
         color: white;
         transform: translateY(-2px);
     }
+
+    .table th {
+        text-align: center; /* Centra el texto de los encabezados */
+        font-weight: bold;
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table td {
+        text-align: center; /* Centra el texto de las celdas */
+        padding: 12px 15px;
+        vertical-align: middle;
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        overflow: hidden; /* Oculta el desbordamiento */
+        text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
 </style>
 
 @code {
-    private List<Obra> listaContratos;
-    private Dictionary<int, string> nombresClientes = new();
-    private Dictionary<int, string> nombresInstaladores = new();
+    private List<Instalador> listaInstaladores;
     private string Mensaje = "";
 
     public class SwalResult
@@ -205,12 +223,10 @@
 
     private async Task Leer()
     {
-        var resp = await http.Get<List<Obra>>("api/Contratos");
+        var resp = await http.Get<List<Instalador>>("api/Instaladores");
         if (!resp.Error)
         {
-            listaContratos = resp.Respuesta;
-            await CargarNombresClientes();
-            await CargarNombresInstaladores();
+            listaInstaladores = resp.Respuesta;
         }
         else
         {
@@ -218,33 +234,9 @@
         }
     }
 
-    private async Task CargarNombresClientes()
-    {
-        var resp = await http.Get<List<Cliente>>("api/Clientes"); // Cambia el endpoint según tu API
-        if (!resp.Error)
-        {
-            foreach (var cliente in resp.Respuesta)
-            {
-                nombresClientes[cliente.Id] = $"{cliente.Nombre} {cliente.Apellido}";
-            }
-        }
-    }
-
-    private async Task CargarNombresInstaladores()
-    {
-        var resp = await http.Get<List<Instalador>>("api/Instaladores"); // Cambia el endpoint según tu API
-        if (!resp.Error)
-        {
-            foreach (var instalador in resp.Respuesta)
-            {
-                nombresInstaladores[instalador.Id] = $"{instalador.Nombre} {instalador.Apellido}";
-            }
-        }
-    }
-
     private async Task Editar(int id)
     {
-        Navigation.NavigateTo($"api/Contratos/editar/{id}");
+        Navigation.NavigateTo($"api/Instaladores/editar/{id}");
     }
 
     private async Task Eliminar(int id)
@@ -254,7 +246,7 @@
         if (result?.isConfirmed == true)
         {
             await Borrar(id);
-            await js.InvokeVoidAsync("Swal.fire", "Exito!", "Documento Eliminado");
+            await js.InvokeVoidAsync("Swal.fire", "Exito!", "Instalador Eliminado");
             StateHasChanged();
         }
         else
@@ -265,10 +257,10 @@
 
     private async Task Borrar(int id)
     {
-        var respuesta = await http.Delete<Obra>($"api/Contratos/{id}");
+        var respuesta = await http.Delete<Instalador>($"api/Instaladores/{id}");
         if (respuesta.Error)
         {
-            Mensaje = "No se pudo borrar el contrato";
+            Mensaje = "No se pudo borrar el instalador";
         }
         await Leer();
     }
