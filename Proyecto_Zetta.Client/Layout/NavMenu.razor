@@ -1,50 +1,28 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Proyecto_Zetta.Client</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<div class="navbar navbar-dark fixed-bottom bg-success">
+    <div class="container-fluid justify-content-center d-flex align-items-center">
+        <div class="nav-item px-3 d-flex align-items-center">
+            <NavLink class="nav-link d-flex align-items-center" href="api/Contratos">
+                <i class="fas fa-file-contract nav-icon"></i> <!-- Icono de contrato -->
+                <span>Contratos</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3 d-flex align-items-center">
+            <NavLink class="nav-link d-flex align-items-center" href="api/Instaladores">
+                <i class="fas fa-tools nav-icon"></i> <!-- Icono de herramientas -->
+                <span>Instaladores</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3 d-flex align-items-center">
+            <NavLink class="nav-link d-flex align-items-center" href="api/Clientes">
+                <i class="fas fa-user nav-icon"></i> <!-- Icono de usuario -->
+                <span>Clientes</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3 d-flex align-items-center">
+            <NavLink class="nav-link d-flex align-items-center" href="https://localhost:44375/swagger" target="_blank">
+                <i class="fas fa-cogs nav-icon"></i> <!-- Icono de configuraciones -->
+                <span>Swagger</span>
+            </NavLink>
+        </div>
     </div>
 </div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="api/Contratos">
-                <img src="images/contrato-logo.png" alt="Contrato Logo" style="width: 20px; height: 20px; margin-right: 8px;" />
-                Contratos
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="api/Instaladores">
-                <img src="images/instalador-logo.png" alt="Instalador Logo" style="width: 20px; height: 20px; margin-right: 8px;" />
-                Instaladores
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="api/Clientes">
-                <img src="images/cliente-logo.png" alt="Cliente Logo" style="width: 20px; height: 20px; margin-right: 8px;" />
-                Clientes
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="https://localhost:44375/swagger" target="_blank">
-                <img src="images/swagger-logo.png" alt="Swagger Logo" style="width: 20px; height: 20px; margin-right: 8px;" />
-                Swagger
-            </NavLink>
-        </div>
-
-
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

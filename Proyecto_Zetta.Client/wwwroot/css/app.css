@@ -102,4 +102,47 @@ code {
     color: #c02d76;
 }
 
+.fixed-bottom {
+    position: fixed;
+    bottom: 50%;  Ajusta la posición vertical a la mitad de la pantalla 
+    left: 0;
+    width: 100%;
+    background-color: #28a745;  Ajusta el color si es necesario 
+    z-index: 10;  Asegura que el NavMenu esté por encima de otros elementos 
+    padding: 10px 0;  Ajusta el espaciado interno si es necesario 
+}
+
+.navbar {
+    font-size: 1rem;  Ajusta el tamaño del texto 
+}
+
+.nav-icon {
+    font-size: 18px;  Asegura que todos los iconos tengan el mismo tamaño 
+    margin-right: 8px;
+    line-height: 1;  Evita que el texto se mueva por el icono 
+}
+
+.nav-item {
+    display: flex;
+    justify-content: center;  Asegura que los elementos se distribuyan correctamente 
+    align-items: center;  Centra los elementos verticalmente 
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;  Alinea icono y texto en el centro verticalmente 
+    padding: 0.5rem 1rem;  Ajusta el espaciado de los botones 
+    font-size: 1rem;  Ajusta el tamaño de la fuente 
+}
+
+    .nav-link span {
+        display: inline-block;
+        vertical-align: middle;  Asegura que el texto esté centrado con el icono 
+        line-height: 1;  Ajusta la altura de línea para que esté en el mismo nivel que el icono 
+    }
+
+.navbar .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
 
