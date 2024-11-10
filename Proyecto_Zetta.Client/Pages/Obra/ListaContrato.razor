@@ -1,4 +1,4 @@
-﻿@page "/api/Contratos"
+﻿@page "/Contratos"
 
 @inject IHttpServicio http
 @inject IJSRuntime js
@@ -8,7 +8,7 @@
 <div class="container">
     <h3 class="title">Lista de Contratos</h3>
 
-    <a class="btn btn-primary nuevo-contrato-btn" href="/api/Contratos/crear">
+    <a class="btn btn-primary nuevo-contrato-btn" href="/Contratos/crear">
         <i class="bi bi-plus-circle"></i> Nuevo Contrato
     </a>
 
@@ -251,7 +251,7 @@
 
     private async Task Editar(int id)
     {
-        Navigation.NavigateTo($"api/Contratos/editar/{id}");
+        Navigation.NavigateTo($"/Contratos/editar/{id}");
     }
 
     private async Task Eliminar(int id)

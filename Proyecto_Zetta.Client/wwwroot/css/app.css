@@ -102,47 +102,58 @@ code {
     color: #c02d76;
 }
 
-.fixed-bottom {
-    position: fixed;
-    bottom: 0; /* Asegúrate de que esté pegada al fondo */
-    left: 0;
-    width: 100%;
-    background-color: #28a745; /* Ajusta el color si es necesario */
-    z-index: 10; /* Asegura que el NavMenu esté por encima de otros elementos */
-    padding: 10px 0; /* Ajusta el espaciado interno si es necesario */
-}
 
+
+
+
+/* Establece el fondo del navbar a un azul degradado */
 .navbar {
-    font-size: 1rem;  Ajusta el tamaño del texto 
+    background: linear-gradient(to right, #1e3c72, #2a5298); /* Azul degradado */
+    padding: 10px 0; /* Añade un poco de padding al navbar para que no esté tan pegado a los bordes */
 }
 
-.nav-icon {
-    font-size: 18px;  Asegura que todos los iconos tengan el mismo tamaño 
-    margin-right: 8px;
-    line-height: 1;  Evita que el texto se mueva por el icono 
-}
-
-.nav-item {
-    display: flex;
-    justify-content: center;  Asegura que los elementos se distribuyan correctamente 
-    align-items: center;  Centra los elementos verticalmente 
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;  Alinea icono y texto en el centro verticalmente 
-    padding: 0.5rem 1rem;  Ajusta el espaciado de los botones 
-    font-size: 1rem;  Ajusta el tamaño de la fuente 
-}
-
-    .nav-link span {
-        display: inline-block;
-        vertical-align: middle;  Asegura que el texto esté centrado con el icono 
-        line-height: 1;  Ajusta la altura de línea para que esté en el mismo nivel que el icono 
+    /* Estilo de los enlaces (botones) */
+    .navbar .nav-link {
+        color: white !important; /* Texto blanco */
+        text-decoration: none; /* Elimina el subrayado */
+        font-size: 1.2rem; /* Aumenta el tamaño de la fuente */
+        font-weight: 600; /* Aumenta el grosor de la fuente */
+        padding: 0.5rem 1rem; /* Añade padding para darle más espacio alrededor del texto */
+        display: flex;
+        align-items: center; /* Alinea verticalmente el texto y el icono */
     }
 
-.navbar .container-fluid {
-    padding-left: 0;
-    padding-right: 0;
+/* Espacio entre el icono y el texto */
+.nav-link .nav-icon {
+    margin-right: 8px; /* Aumenta el espacio entre el icono y el texto */
+    font-size: 1.4rem; /* Aumenta el tamaño del icono */
 }
 
+/* Hover en los botones */
+.navbar .nav-link:hover {
+    color: #f8f9fa !important; /* Cambio de color en hover para que resalte */
+    background-color: rgba(255, 255, 255, 0.2); /* Añade un color de fondo en hover */
+    border-radius: 5px; /* Bordes redondeados en el hover */
+}
+
+/* Estilo para los elementos dentro del navbar */
+.navbar .nav-item {
+    padding: 0 15px; /* Añade espacio entre los elementos */
+    display: flex;
+    align-items: center;
+}
+
+/* Asegura que el navbar se vea bien al estar fijo en la parte inferior */
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+/* Ajustes generales de la navbar */
+.navbar .container-fluid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

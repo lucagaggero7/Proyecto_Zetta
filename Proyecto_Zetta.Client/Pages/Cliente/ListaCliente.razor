@@ -1,4 +1,4 @@
-﻿@page "/api/Clientes"
+﻿@page "/Clientes"
 
 @inject IHttpServicio http
 @inject IJSRuntime js
@@ -8,7 +8,7 @@
 <div class="container">
     <h3 class="title">Lista de Clientes</h3>
 
-    <a class="btn btn-primary nuevo-cliente-btn" href="/api/Clientes/crear">
+    <a class="btn btn-primary nuevo-cliente-btn" href="/Clientes/crear">
         <i class="bi bi-plus-circle"></i> Nuevo Cliente
     </a>
 
@@ -222,7 +222,7 @@
 
     private async Task Editar(int id)
     {
-        Navigation.NavigateTo($"api/Clientes/editar/{id}");
+        Navigation.NavigateTo($"/Clientes/editar/{id}");
     }
 
     private async Task Eliminar(int id)

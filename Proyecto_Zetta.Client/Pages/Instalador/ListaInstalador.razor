@@ -1,4 +1,4 @@
-﻿@page "/api/Instaladores"
+﻿@page "/Instaladores"
 
 @inject IHttpServicio http
 @inject IJSRuntime js
@@ -8,7 +8,7 @@
 <div class="container">
     <h3 class="title">Lista de Instaladores</h3>
 
-    <a class="btn btn-primary nuevo-instalador-btn" href="/api/Instaladores/crear">
+    <a class="btn btn-primary nuevo-instalador-btn" href="/Instaladores/crear">
         <i class="bi bi-plus-circle"></i> Nuevo Instalador
     </a>
 
@@ -243,7 +243,7 @@
 
     private async Task Editar(int id)
     {
-        Navigation.NavigateTo($"api/Instaladores/editar/{id}");
+        Navigation.NavigateTo($"/Instaladores/editar/{id}");
     }
 
     private async Task Eliminar(int id)

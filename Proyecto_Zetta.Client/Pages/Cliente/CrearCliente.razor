@@ -1,4 +1,4 @@
-﻿@page "/api/Clientes/crear"
+﻿@page "/Clientes/crear"
 @using Proyecto_Zetta.Shared.DTO
 @inject IHttpServicio http
 @inject NavigationManager nav
@@ -136,11 +136,11 @@
         {
             var body = httpRespuesta.HttpResponseMessage;
         }
-        nav.NavigateTo("/api/Clientes");
+        nav.NavigateTo("/Clientes");
     }
 
     private void Cancelar()
     {
-        nav.NavigateTo("/api/Clientes");
+        nav.NavigateTo("/Clientes");
     }
 }

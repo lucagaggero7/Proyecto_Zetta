@@ -1,4 +1,4 @@
-﻿@page "/api/Contratos/editar/{contratoId:int}"
+﻿@page "/Contratos/editar/{contratoId:int}"
 @using Proyecto_Zetta.Shared.DTO
 @inject IHttpServicio http
 @inject NavigationManager nav
@@ -103,7 +103,7 @@
         }
         else
         {
-            nav.NavigateTo("/api/Contratos");
+            nav.NavigateTo("/Contratos");
         }
     }
 
@@ -132,12 +132,12 @@
         {
             var body = httpRespuesta.HttpResponseMessage;
         }
-        nav.NavigateTo("/api/Contratos");
+        nav.NavigateTo("/Contratos");
     }
 
     private void Cancelar()
     {
-        nav.NavigateTo("/api/Contratos");
+        nav.NavigateTo("/Contratos");
     }
 
     public class Instalador

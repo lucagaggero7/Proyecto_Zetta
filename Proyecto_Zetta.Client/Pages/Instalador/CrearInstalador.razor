@@ -1,4 +1,4 @@
-﻿@page "/api/Instaladores/crear"
+﻿@page "/Instaladores/crear"
 @using Proyecto_Zetta.Shared.DTO
 @inject IHttpServicio http
 @inject NavigationManager nav
@@ -138,11 +138,11 @@
         {
             var body = httpRespuesta.HttpResponseMessage;
         }
-        nav.NavigateTo("/api/Instaladores");
+        nav.NavigateTo("/Instaladores");
     }
 
     private void Cancelar()
     {
-        nav.NavigateTo("/api/Instaladores");
+        nav.NavigateTo("/Instaladores");
     }
 }

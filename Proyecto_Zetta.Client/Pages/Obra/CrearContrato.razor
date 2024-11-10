@@ -1,4 +1,4 @@
-﻿@page "/api/Contratos/crear"
+﻿@page "/Contratos/crear"
 @using Proyecto_Zetta.Shared.DTO
 @inject IHttpServicio http
 @inject NavigationManager nav
@@ -101,7 +101,7 @@
 
     private async Task CargarClientes()
     {
-        var respuesta = await http.Get<List<Cliente>>("api/Clientes");
+        var respuesta = await http.Get<List<Cliente>>("/api/Clientes");
         if (!respuesta.Error)
         {
             listaClientes = respuesta.Respuesta;
@@ -131,11 +131,11 @@
         {
             var body = httpRespuesta.HttpResponseMessage;
         }
-        nav.NavigateTo("/api/Contratos");
+        nav.NavigateTo("/Contratos");
     }
 
     private void Cancelar()
     {
-        nav.NavigateTo("/api/Contratos");
+        nav.NavigateTo("/Contratos");
     }
 }
