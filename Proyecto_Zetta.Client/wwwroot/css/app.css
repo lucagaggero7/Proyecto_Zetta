@@ -104,12 +104,12 @@ code {
 
 .fixed-bottom {
     position: fixed;
-    bottom: 50%;  Ajusta la posición vertical a la mitad de la pantalla 
+    bottom: 0; /* Asegúrate de que esté pegada al fondo */
     left: 0;
     width: 100%;
-    background-color: #28a745;  Ajusta el color si es necesario 
-    z-index: 10;  Asegura que el NavMenu esté por encima de otros elementos 
-    padding: 10px 0;  Ajusta el espaciado interno si es necesario 
+    background-color: #28a745; /* Ajusta el color si es necesario */
+    z-index: 10; /* Asegura que el NavMenu esté por encima de otros elementos */
+    padding: 10px 0; /* Ajusta el espaciado interno si es necesario */
 }
 
 .navbar {
