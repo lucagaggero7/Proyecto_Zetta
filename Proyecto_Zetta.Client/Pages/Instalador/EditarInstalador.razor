@@ -1,0 +1,114 @@
+﻿@page "/Instaladores/editar/{instaladorId:int}"
+@using Proyecto_Zetta.Shared.DTO
+@inject IHttpServicio http
+@inject NavigationManager nav
+
+<h3>
+    Editar Instalador
+</h3>
+
+<EditForm Model="instalador" OnValidSubmit="Grabar">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>
+            Actividad
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@instalador.Actividad" />
+            <ValidationMessage For="@(() => instalador.Actividad)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Nombre
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@instalador.Nombre" />
+            <ValidationMessage For="@(() => instalador.Nombre)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Apellido
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@instalador.Apellido" />
+            <ValidationMessage For="@(() => instalador.Apellido)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Dni
+        </label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@instalador.Dni" />
+            <ValidationMessage For="@(() => instalador.Dni)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Telefono
+        </label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@instalador.Telefono" />
+            <ValidationMessage For="@(() => instalador.Telefono)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Descripcion
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@instalador.Descripcion" />
+            <ValidationMessage For="@(() => instalador.Descripcion)" />
+        </div>
+    </div>
+
+    <br />
+
+    <button class="btn btn-primary" type="submit"> Aceptar </button>
+    <button class="btn btn-secondary" @onclick="Cancelar"> Cancelar </button>
+
+</EditForm>
+
+@code {
+    [Parameter] public int instaladorId { get; set; }
+    private EditarInstaladorDTO instalador = new EditarInstaladorDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Mostrar();
+    }
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<EditarInstaladorDTO>($"api/Instaladores/GetById/{instaladorId}");
+
+        if (!respuesta.Error)
+        {
+            instalador = respuesta.Respuesta;
+        }
+        else
+        {
+            nav.NavigateTo("/Instaladores");
+        }
+    }
+
+   
+
+    private async Task Grabar()
+    {
+        var httpRespuesta = await http.Put<EditarInstaladorDTO>($"api/Instaladores/{instaladorId}", instalador);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        nav.NavigateTo("/Instaladores");
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/Instaladores");
+    }
+}
