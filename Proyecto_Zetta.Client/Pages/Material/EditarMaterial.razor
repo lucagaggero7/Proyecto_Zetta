@@ -1,0 +1,87 @@
+﻿@page "/Materiales/editar/{materialId:int}"
+@using Proyecto_Zetta.Shared.DTO
+@inject IHttpServicio http
+@inject NavigationManager nav
+
+<h3>
+    Editar Material
+</h3>
+
+<EditForm Model="material" OnValidSubmit="Grabar">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>
+            Nombre
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@material.Nombre" />
+            <ValidationMessage For="@(() => material.Nombre)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Unidad de medida
+        </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@material.UnidadMedida" />
+            <ValidationMessage For="@(() => material.UnidadMedida)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>
+            Precio
+        </label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@material.Precio" />
+            <ValidationMessage For="@(() => material.Precio)" />
+        </div>
+    </div>
+
+    <br />
+
+    <button class="btn btn-primary" type="submit"> Aceptar </button>
+    <button class="btn btn-secondary" @onclick="Cancelar"> Cancelar </button>
+
+</EditForm>
+
+@code {
+    [Parameter] public int materialId { get; set; }
+    private EditarMaterialDTO material = new EditarMaterialDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Mostrar();
+    }
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<EditarMaterialDTO>($"api/Materiales/GetById/{materialId}");
+
+        if (!respuesta.Error)
+        {
+            material = respuesta.Respuesta;
+        }
+        else
+        {
+            nav.NavigateTo("/Materiales");
+        }
+    }
+
+
+
+    private async Task Grabar()
+    {
+        var httpRespuesta = await http.Put<EditarMaterialDTO>($"api/Materiales/{materialId}", material);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        nav.NavigateTo("/Materiales");
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/Materiales");
+    }
+}

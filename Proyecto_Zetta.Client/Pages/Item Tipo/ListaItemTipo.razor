@@ -1,0 +1,253 @@
+﻿@page "/ItemsTipo"
+
+@inject IHttpServicio http
+@inject IJSRuntime js
+@inject AlertaServicio Alerta
+@inject NavigationManager Navigation
+
+<div class="container">
+    <h3 class="title">Lista de Items Tipo</h3>
+
+    <a class="btn btn-primary nuevo-cliente-btn" href="/ItemsTipo/crear">
+        <i class="bi bi-plus-circle"></i> Nuevo Item Tipo
+    </a>
+
+    @if (!string.IsNullOrEmpty(Mensaje))
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i> Error: @Mensaje
+        </div>
+    }
+    else if (listaItemsTipo == null)
+    {
+        <p class="loading-text"><i class="bi bi-arrow-repeat"></i> Buscando...</p>
+    }
+    else if (listaItemsTipo.Count == 0)
+    {
+        <p class="no-data-text"><i class="bi bi-folder-x"></i> No existen Items tipo</p>
+    }
+    else
+    {
+        <div class="table-responsive shadow-lg rounded">
+            <table class="table table-hover table-custom">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Insumos</th>
+                        <th>Mano de obra</th>
+                        <th>Precio Final </th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listaItemsTipo)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Insumos</td>
+                            <td>@item.ManodeObra</td>
+                            <td>@item.PrecioFinal</td>
+                            <td class="text-center">
+                                <button class="btn btn-edit" @onclick="() => Editar(item.Id)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 5px;">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                    </svg>
+                                    Editar
+                                </button>
+                                <button class="btn btn-delete" @onclick="() => Eliminar(item.Id)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 5px;">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    Eliminar
+                                </button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #343a40;
+        text-align: center;
+    }
+
+    .nuevo-cliente-btn {
+        margin-bottom: 20px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: 600;
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        color: white;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+        .nuevo-cliente-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #0056b3, #007bff);
+        }
+
+    .alert {
+        margin-top: 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+
+    .loading-text, .no-data-text {
+        font-size: 1.2rem;
+        color: #6c757d;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .loading-text i, .no-data-text i {
+            margin-right: 8px;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+        margin-top: 20px;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-custom {
+        border-collapse: collapse;
+    }
+
+    .table th {
+        text-align: center; /* Centrar texto en los encabezados */
+        font-weight: bold;
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table td, .table th {
+        padding: 12px 15px;
+        vertical-align: middle;
+        text-align: center; /* Centrar texto en las celdas */
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        overflow: hidden; /* Oculta el desbordamiento */
+        text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background-color: transparent;
+        border: 2px solid #007bff;
+        color: #007bff;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        margin-right: 15px;
+    }
+
+    .btn-delete {
+        background-color: transparent;
+        border: 2px solid #dc3545;
+        color: #dc3545;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-edit:hover {
+        background-color: #007bff;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-delete:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: translateY(-2px);
+    }
+</style>
+
+@code {
+    private List<ItemTipo> listaItemsTipo;
+    private string Mensaje = "";
+
+    public class SwalResult
+    {
+        public bool? isConfirmed { get; set; }
+        public bool? isDenied { get; set; }
+        public bool? isDismissed { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Leer();
+    }
+
+    private async Task Leer()
+    {
+        var resp = await http.Get<List<ItemTipo>>("api/ItemsTipo");
+        if (!resp.Error)
+        {
+            listaItemsTipo = resp.Respuesta;
+        }
+        else
+        {
+            Mensaje = await resp.ObtenerError();
+        }
+    }
+
+    private async Task Editar(int id)
+    {
+        Navigation.NavigateTo($"/ItemsTipo/editar/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!");
+
+        if (result?.isConfirmed == true)
+        {
+            await Borrar(id);
+            await js.InvokeVoidAsync("Swal.fire", "Éxito!", "Item Tipo Eliminado");
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Eliminación cancelada.");
+        }
+    }
+
+    private async Task Borrar(int id)
+    {
+        var respuesta = await http.Delete<ItemTipo>($"api/ItemsTipo/{id}");
+        if (respuesta.Error)
+        {
+            Mensaje = "No se pudo borrar el item tipo";
+        }
+        await Leer();
+    }
+}

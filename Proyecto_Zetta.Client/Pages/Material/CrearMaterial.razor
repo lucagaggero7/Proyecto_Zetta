@@ -1,0 +1,123 @@
+﻿@page "/Materiales/crear"
+@using Proyecto_Zetta.Shared.DTO
+@inject IHttpServicio http
+@inject NavigationManager nav
+
+<div class="container">
+    <h3 class="title">Nuevo Material</h3>
+
+    <EditForm Model="material" OnValidSubmit="Grabar">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label>Nombre</label>
+            <InputText class="form-control" @bind-Value="@material.Nombre" />
+            <ValidationMessage For="@(() => material.Nombre)" />
+        </div>
+
+        <div class="form-group">
+            <label>Unidad de medida</label>
+            <InputText class="form-control" @bind-Value="@material.UnidadMedida" />
+            <ValidationMessage For="@(() => material.UnidadMedida)" />
+        </div>
+
+        <div class="form-group">
+            <label>Precio</label>
+            <InputNumber class="form-control" @bind-Value="@material.Precio" />
+            <ValidationMessage For="@(() => material.Precio)" />
+        </div>
+
+
+        <div class="button-group">
+            <button class="btn btn-primary" type="submit">Aceptar</button>
+            <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #343a40;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+    }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            accent-color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 4px;
+        }
+
+        .checkbox-container label {
+            font-weight: bold;
+            color: #343a40;
+            font-size: 1.1rem;
+        }
+</style>
+
+@code {
+    private CrearMaterialDTO material = new CrearMaterialDTO();
+
+    private async Task Grabar()
+    {
+        var httpRespuesta = await http.Post<CrearMaterialDTO>("api/Materiales", material);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        nav.NavigateTo("/Materiales");
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/Materiales");
+    }
+}
