@@ -4,7 +4,7 @@
 @inject IJSRuntime js
 @inject AlertaServicio Alerta
 @inject NavigationManager Navigation
-<!--comentario random -->
+
 <div class="container">
     <h3 class="title">Lista de Contratos</h3>
 
@@ -43,7 +43,7 @@
                 <tbody>
                     @foreach (var item in listaContratos)
                     {
-                        <tr>
+                        <tr @onclick="() => ExpandirPresupuestos(item.Id)">
                             <td>@item.Estado</td>
                             <td>@item.Descripcion</td>
                             <td>@item.FechaAlta.ToString("dd/MM/yyyy")</td>
@@ -57,8 +57,36 @@
                                     <i class="bi bi-trash-fill icon-size"></i>
                                 </button>
                             </td>
-
                         </tr>
+                        @if (item.Id == idSeleccionado)
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo de Presupuesto</th>
+                                                    <th>Precio Final</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var presupuesto in presupuestos)
+                                                {
+                                                    @if (presupuesto.ObraId == item.Id)
+                                                    {
+                                                        <tr>
+                                                            <td>@presupuesto.Tipo</td>
+                                                            <td>@presupuesto.PrecioFinal.ToString("C")</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -68,56 +96,26 @@
 
 <style>
     .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
     }
 
     .title {
         font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 20px;
-        color: #343a40;
-        text-align: center;
+        font-weight: 600;
     }
 
     .nuevo-contrato-btn {
-        margin-bottom: 20px;
-        display: inline-flex;
-        align-items: center;
-        font-weight: 600;
-        background: linear-gradient(45deg, #007bff, #0056b3);
-        border: none;
-        color: white;
-        transition: background 0.3s ease, transform 0.2s ease;
+        margin-bottom: 1rem;
     }
 
-    .nuevo-contrato-btn:hover {
-        transform: translateY(-2px);
-        background: linear-gradient(45deg, #0056b3, #007bff);
-    }
-
-    .alert {
-        margin-top: 10px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-    }
-
-    .loading-text, .no-data-text {
-        font-size: 1.2rem;
-        color: #6c757d;
+    .loading-text {
         text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        color: #888;
     }
 
-    .loading-text i, .no-data-text i {
-        margin-right: 8px;
+    .no-data-text {
+        text-align: center;
+        color: #888;
     }
 
     .table-responsive {
@@ -133,7 +131,7 @@
     }
 
     .table th {
-        text-align: center;
+        text-align: center; /* Centrar texto en los encabezados */
         font-weight: bold;
         background-color: #007bff;
         color: white;
@@ -142,6 +140,7 @@
     .table td, .table th {
         padding: 12px 15px;
         vertical-align: middle;
+        text-align: center; /* Centrar texto en las celdas */
         white-space: nowrap; /* Evita que el texto se divida en varias líneas */
         overflow: hidden; /* Oculta el desbordamiento */
         text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
@@ -153,16 +152,20 @@
     }
 
 
+
     .icon-size {
-        font-size: 20px; /* Ajusta el tamaño del ícono */
+        font-size: 1.2rem;
     }
+
 </style>
 
 @code {
     private List<Obra> listaContratos;
     private Dictionary<int, string> nombresClientes = new();
     private Dictionary<int, string> nombresInstaladores = new();
+    private List<Presupuesto> presupuestos = new();
     private string Mensaje = "";
+    private int idSeleccionado = 0; // ID de la obra seleccionada para expandir
 
     public class SwalResult
     {
@@ -184,6 +187,7 @@
             listaContratos = resp.Respuesta;
             await CargarNombresClientes();
             await CargarNombresInstaladores();
+            await CargarPresupuestos();
         }
         else
         {
@@ -193,7 +197,7 @@
 
     private async Task CargarNombresClientes()
     {
-        var resp = await http.Get<List<Cliente>>("api/Clientes"); // Cambia el endpoint según tu API
+        var resp = await http.Get<List<Cliente>>("api/Clientes");
         if (!resp.Error)
         {
             foreach (var cliente in resp.Respuesta)
@@ -205,13 +209,22 @@
 
     private async Task CargarNombresInstaladores()
     {
-        var resp = await http.Get<List<Instalador>>("api/Instaladores"); // Cambia el endpoint según tu API
+        var resp = await http.Get<List<Instalador>>("api/Instaladores");
         if (!resp.Error)
         {
             foreach (var instalador in resp.Respuesta)
             {
                 nombresInstaladores[instalador.Id] = $"{instalador.Nombre} {instalador.Apellido}";
             }
+        }
+    }
+
+    private async Task CargarPresupuestos()
+    {
+        var resp = await http.Get<List<Presupuesto>>("api/Presupuestos"); // Cambia el endpoint si es necesario
+        if (!resp.Error)
+        {
+            presupuestos = resp.Respuesta;
         }
     }
 
@@ -244,5 +257,11 @@
             Mensaje = "No se pudo borrar el contrato";
         }
         await Leer();
+    }
+
+    private void ExpandirPresupuestos(int id)
+    {
+        // Si ya se está mostrando, se contrae
+        idSeleccionado = (idSeleccionado == id) ? 0 : id;
     }
 }
