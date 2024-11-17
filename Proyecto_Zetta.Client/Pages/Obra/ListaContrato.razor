@@ -56,6 +56,9 @@
                                 <button class="btn btn-delete btn-sm" @onclick="() => Eliminar(item.Id)">
                                     <i class="bi bi-trash-fill icon-size"></i>
                                 </button>
+                                <button class="btn btn-primary btn-sm" @onclick="() => AgregarPresupuesto(item.Id)">
+                                    <i class="bi bi-plus-circle icon-size"></i>
+                                </button>
                             </td>
                         </tr>
                         @if (item.Id == idSeleccionado)
@@ -63,30 +66,45 @@
                             <tr>
                                 <td colspan="6">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Tipo de Presupuesto</th>
-                                                    <th>Precio Final</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var presupuesto in presupuestos)
-                                                {
-                                                    @if (presupuesto.ObraId == item.Id)
+                                        @if (presupuestos.Any(p => p.ObraId == item.Id))
+                                        {
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tipo de Presupuesto</th>
+                                                        <th>Precio Final</th>
+                                                        <th>Acciones</th> <!-- Agregué este encabezado para Acciones -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var presupuesto in presupuestos.Where(p => p.ObraId == item.Id))
                                                     {
                                                         <tr>
                                                             <td>@presupuesto.Tipo</td>
                                                             <td>@presupuesto.PrecioFinal.ToString("C")</td>
+                                                            <td class="text-center">
+                                                                <button class="btn btn-delete btn-sm" @onclick="() => BorrarPresupuesto(presupuesto.Id)">
+                                                                    <i class="bi bi-trash-fill icon-size"></i>
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                     }
-                                                }
-                                            </tbody>
-                                        </table>
+                                                </tbody>
+                                            </table>
+                                        }
+                                        else
+                                        {
+                                            <p class="no-presupuestos-text">
+                                                <i class="bi bi-folder-x"></i> No hay presupuestos asignados a este contrato.
+                                            </p>
+                                        }
+
                                     </div>
                                 </td>
                             </tr>
                         }
+
+
                     }
                 </tbody>
             </table>
@@ -96,65 +114,65 @@
 
 <style>
     .container {
-        margin-top: 2rem;
+    margin-top: 2rem;
     }
 
     .title {
-        font-size: 2rem;
-        font-weight: 600;
+    font-size: 2rem;
+    font-weight: 600;
     }
 
     .nuevo-contrato-btn {
-        margin-bottom: 1rem;
+    margin-bottom: 1rem;
     }
 
     .loading-text {
-        text-align: center;
-        color: #888;
+    text-align: center;
+    color: #888;
     }
 
     .no-data-text {
-        text-align: center;
-        color: #888;
+    text-align: center;
+    color: #888;
     }
 
     .table-responsive {
-        overflow-x: auto;
-        margin-top: 20px;
-        border-radius: 8px;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .table-custom {
-        border-collapse: collapse;
+    border-collapse: collapse;
     }
 
     .table th {
-        text-align: center; /* Centrar texto en los encabezados */
-        font-weight: bold;
-        background-color: #007bff;
-        color: white;
+    text-align: center; /* Centrar texto en los encabezados */
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
     }
 
     .table td, .table th {
-        padding: 12px 15px;
-        vertical-align: middle;
-        text-align: center; /* Centrar texto en las celdas */
-        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-        overflow: hidden; /* Oculta el desbordamiento */
-        text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+    padding: 12px 15px;
+    vertical-align: middle;
+    text-align: center; /* Centrar texto en las celdas */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Oculta el desbordamiento */
+    text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
     }
 
     .table-hover tbody tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
+    background-color: #f1f1f1;
+    cursor: pointer;
     }
 
 
 
     .icon-size {
-        font-size: 1.2rem;
+    font-size: 1.2rem;
     }
 
 </style>
@@ -167,6 +185,10 @@
     private string Mensaje = "";
     private int idSeleccionado = 0; // ID de la obra seleccionada para expandir
 
+    private void AgregarPresupuesto(int contratoId)
+    {
+        Navigation.NavigateTo($"/CrearPresupuesto/{contratoId}");
+    }
     public class SwalResult
     {
         public bool? isConfirmed { get; set; }
@@ -225,6 +247,26 @@
         if (!resp.Error)
         {
             presupuestos = resp.Respuesta;
+        }
+    }
+
+    private async Task BorrarPresupuesto(int id)
+    {
+        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!");
+
+        if (result?.isConfirmed == true)
+        {
+            var respuesta = await http.Delete<Presupuesto>($"api/Presupuestos/{id}");
+            if (respuesta.Error)
+            {
+                Mensaje = "No se pudo borrar el presupuesto";
+            }
+            await Leer();
+            await js.InvokeVoidAsync("Swal.fire", "Éxito", "Presupuesto eliminado correctamente");
+        }
+        else
+        {
+            Console.WriteLine("Eliminación cancelada.");
         }
     }
 

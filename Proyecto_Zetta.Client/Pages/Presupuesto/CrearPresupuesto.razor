@@ -1,4 +1,4 @@
-﻿@page "/Presupuestos/crear"
+﻿@page "/CrearPresupuesto/{contratoId:int}"
 @using Proyecto_Zetta.Shared.DTO
 @inject IHttpServicio http
 @inject NavigationManager nav
@@ -7,18 +7,6 @@
 
 <EditForm Model="presupuesto" OnValidSubmit="Grabar">
     <DataAnnotationsValidator />
-
-    <div class="form-group">
-        <label>Estado</label>
-        <div>
-            <select class="form-control" @bind="presupuesto.Estado">
-                <option value="">Seleccione un estado</option>
-                <option value="Aceptado">Aceptado</option>
-                <option value="Rechazado">Rechazado</option>
-            </select>
-            <ValidationMessage For="@(() => presupuesto.Estado)" />
-        </div>
-    </div>
 
     <div class="form-group">
         <label>Tipo</label>
@@ -52,14 +40,6 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label>Precio Final</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@presupuesto.PrecioFinal" />
-            <ValidationMessage For="@(() => presupuesto.PrecioFinal)" />
-        </div>
-    </div>
-
 
     <div class="form-group">
         <label>Forma de Pago</label>
@@ -75,19 +55,6 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label>Obra</label>
-        <div>
-            <select class="form-control" @bind="presupuesto.ObraId">
-                <option value="">Seleccione la obra</option>
-                @foreach (var obras in listaObras)
-                {
-                    <option value="@obras.Id">@obras.Id</option>
-                }
-            </select>
-            <ValidationMessage For="@(() => presupuesto.ObraId)" />
-        </div>
-    </div>
 
     <div class="form-group">
         <label>Item Tipo</label>
@@ -110,6 +77,8 @@
 </EditForm>
 
 @code {
+
+    [Parameter] public int contratoId { get; set; }
     private CrearPresupuestoDTO presupuesto = new CrearPresupuestoDTO();
     private List<FormadePago> listaFormasdePago = new List<FormadePago>();
     private List<Obra> listaObras = new List<Obra>();
@@ -117,8 +86,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        presupuesto.ObraId = contratoId;
+        presupuesto.Estado = "Aceptado";
+
         await CargarFormasdepago();
-        await CargarObras();
         await CargarItemsTipo();
     }
 
@@ -128,15 +99,6 @@
         if (!respuesta.Error)
         {
             listaFormasdePago = respuesta.Respuesta;
-        }
-    }
-
-    private async Task CargarObras()
-    {
-        var respuesta = await http.Get<List<Obra>>("api/Contratos");
-        if (!respuesta.Error)
-        {
-            listaObras = respuesta.Respuesta;
         }
     }
 
@@ -177,6 +139,7 @@
 
     private async Task Grabar()
     {
+        presupuesto.PrecioFinal = presupuesto.Insumos + presupuesto.ManodeObra;
         var httpRespuesta = await http.Post<CrearPresupuestoDTO>("api/Presupuestos", presupuesto);
         if (httpRespuesta.Error)
         {
