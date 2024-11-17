@@ -185,10 +185,24 @@
     private string Mensaje = "";
     private int idSeleccionado = 0; // ID de la obra seleccionada para expandir
 
+    protected override async Task OnParametersSetAsync()
+    {
+        var uri = Navigation.Uri;
+        var queryParameters = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(new Uri(uri).Query);
+
+        if (queryParameters.TryGetValue("expandId", out var expandIdStr) && int.TryParse(expandIdStr, out var contratoId))
+        {
+            idSeleccionado = contratoId; // Expandir el contrato con el ID correspondiente
+        }
+
+        await Leer();
+    }
+
     private void AgregarPresupuesto(int contratoId)
     {
-        Navigation.NavigateTo($"/CrearPresupuesto/{contratoId}");
+        Navigation.NavigateTo($"/CrearPresupuesto/{contratoId}?expandId={contratoId}");
     }
+
     public class SwalResult
     {
         public bool? isConfirmed { get; set; }
