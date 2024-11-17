@@ -1,0 +1,192 @@
+﻿@page "/Presupuestos/crear"
+@using Proyecto_Zetta.Shared.DTO
+@inject IHttpServicio http
+@inject NavigationManager nav
+
+<h3>Nuevo Presupuesto</h3>
+
+<EditForm Model="presupuesto" OnValidSubmit="Grabar">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label>Estado</label>
+        <div>
+            <select class="form-control" @bind="presupuesto.Estado">
+                <option value="">Seleccione un estado</option>
+                <option value="Aceptado">Aceptado</option>
+                <option value="Rechazado">Rechazado</option>
+            </select>
+            <ValidationMessage For="@(() => presupuesto.Estado)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Tipo</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@presupuesto.Tipo" />
+            <ValidationMessage For="@(() => presupuesto.Tipo)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Materiales Incluidos</label>
+        <div class="form-check">
+            <InputCheckbox class="form-check-input" @bind-Value="@presupuesto.MaterialesIncl" />
+            <ValidationMessage For="@(() => presupuesto.MaterialesIncl)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Insumos</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@presupuesto.Insumos" />
+            <ValidationMessage For="@(() => presupuesto.Insumos)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Mano de obra</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@presupuesto.ManodeObra" />
+            <ValidationMessage For="@(() => presupuesto.ManodeObra)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Precio Final</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@presupuesto.PrecioFinal" />
+            <ValidationMessage For="@(() => presupuesto.PrecioFinal)" />
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label>Forma de Pago</label>
+        <div>
+            <select class="form-control" @bind="presupuesto.FormadePagoId">
+                <option value="">Seleccione una forma de pago</option>
+                @foreach (var formasdepago in listaFormasdePago)
+                {
+                    <option value="@formasdepago.Id">@formasdepago.Nombre</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => presupuesto.FormadePagoId)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Obra</label>
+        <div>
+            <select class="form-control" @bind="presupuesto.ObraId">
+                <option value="">Seleccione la obra</option>
+                @foreach (var obras in listaObras)
+                {
+                    <option value="@obras.Id">@obras.Id</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => presupuesto.ObraId)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Item Tipo</label>
+        <div>
+            <select class="form-control" @bind="presupuesto.ItemTipoId">
+                <option value="">Seleccione un item tipo</option>
+                @foreach (var itemstipo in listaItemsTipo)
+                {
+                    <option value="@itemstipo.Id">@itemstipo.Nombre</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => presupuesto.ItemTipoId)" />
+        </div>
+    </div>
+
+    <br />
+
+    <button class="btn btn-primary" type="submit">Aceptar</button>
+    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+
+@code {
+    private CrearPresupuestoDTO presupuesto = new CrearPresupuestoDTO();
+    private List<FormadePago> listaFormasdePago = new List<FormadePago>();
+    private List<Obra> listaObras = new List<Obra>();
+    private List<ItemTipo> listaItemsTipo = new List<ItemTipo>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarFormasdepago();
+        await CargarObras();
+        await CargarItemsTipo();
+    }
+
+    private async Task CargarFormasdepago()
+    {
+        var respuesta = await http.Get<List<FormadePago>>("api/FormasdePago");
+        if (!respuesta.Error)
+        {
+            listaFormasdePago = respuesta.Respuesta;
+        }
+    }
+
+    private async Task CargarObras()
+    {
+        var respuesta = await http.Get<List<Obra>>("api/Contratos");
+        if (!respuesta.Error)
+        {
+            listaObras = respuesta.Respuesta;
+        }
+    }
+
+    private async Task CargarItemsTipo()
+    {
+        var respuesta = await http.Get<List<ItemTipo>>("api/ItemsTipo");
+        if (!respuesta.Error)
+        {
+            listaItemsTipo = respuesta.Respuesta;
+        }
+    }
+
+    public class FormadePago
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+    }
+
+    public class Obra
+    {
+        public int Id { get; set; }
+        public string Estado { get; set; }
+        public string Descripcion { get; set; }
+        public DateTime? FechaBaja { get; set; }
+        public DateTime? FechaAlta { get; set; }
+        public string AnexarServicio { get; set; }
+    }
+
+    public class ItemTipo
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public long Insumos { get; set; }
+        public long ManodeObra { get; set; }
+        public long PrecioFinal { get; set; }
+
+    }
+
+    private async Task Grabar()
+    {
+        var httpRespuesta = await http.Post<CrearPresupuestoDTO>("api/Presupuestos", presupuesto);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        nav.NavigateTo("/Presupuestos");
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/Presupuestos");
+    }
+}

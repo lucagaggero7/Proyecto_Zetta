@@ -46,6 +46,7 @@ builder.Services.AddScoped<IFormadePagoRepositorio, FormadePagoRepositorio>();
 builder.Services.AddScoped<IMaterialRepositorio, MaterialRepositorio>();
 builder.Services.AddScoped<IMantenimientoRepositorio, MantenimientoRepositorio>();
 builder.Services.AddScoped<IItemTipoRepositorio, ItemTipoRepositorio>();
+builder.Services.AddScoped<IPresupuestoRepositorio, PresupuestoRepositorio>();
 
 var app = builder.Build();
 

@@ -1,0 +1,270 @@
+﻿@page "/Presupuestos"
+
+@inject IHttpServicio http
+@inject IJSRuntime js
+@inject AlertaServicio Alerta
+@inject NavigationManager Navigation
+
+<div class="container">
+    <h3 class="title">Lista de Presupuestos</h3>
+
+    <a class="btn btn-primary nuevo-presupuesto-btn" href="/Presupuestos/crear">
+        <i class="bi bi-plus-circle me-2"></i> Nuevo Presupuesto
+    </a>
+
+    @if (!string.IsNullOrEmpty(Mensaje))
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i> Error: @Mensaje
+        </div>
+    }
+    else if (listaPresupuestos == null)
+    {
+        <p class="loading-text"><i class="bi bi-arrow-repeat"></i> Buscando...</p>
+    }
+    else if (listaPresupuestos.Count == 0)
+    {
+        <p class="no-data-text"><i class="bi bi-folder-x"></i> No existen presupuestos</p>
+    }
+    else
+    {
+        <div class="table-responsive shadow-lg rounded">
+            <table class="table table-hover table-custom">
+                <thead class="table-light">
+                    <tr>
+                        <th>Estado</th>
+                        <th>Tipo</th>
+                        <th>Materiales Incluidos</th>
+                        <th>Insumos</th>
+                        <th>Mano de Obra</th>
+                        <th>Precio Final</th>
+                        <th>Forma de Pago</th>
+                        <th>Obra</th>
+                        <th>Item Tipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in listaPresupuestos)
+                    {
+                        <tr>
+                            <td>@item.Estado</td>
+                            <td>@item.Tipo</td>
+                            <td>@(item.MaterialesIncl ? "Sí" : "No")</td>
+                            <td>@item.Insumos</td>
+                            <td>@item.ManodeObra</td>
+                            <td>@item.PrecioFinal</td>
+                            <td>@(nombresFormasdepago.ContainsKey(item.FormadePagoId) ? nombresFormasdepago[item.FormadePagoId] : "Desconocido")</td>
+                            <td>@(nombresObras.ContainsKey(item.ObraId) ? nombresObras[item.ObraId] : "Desconocido")</td>
+                            <td>@(nombresItemstipo.ContainsKey(item.ItemTipoId) ? nombresItemstipo[item.ItemTipoId] : "Desconocido")</td>
+                            <td class="text-center">
+                                <button class="btn btn-edit btn-sm" @onclick="() => Editar(item.Id)">
+                                    <i class="bi bi-pencil-fill icon-size"></i>
+                                </button>
+                                <button class="btn btn-delete btn-sm" @onclick="() => Eliminar(item.Id)">
+                                    <i class="bi bi-trash-fill icon-size"></i>
+                                </button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #343a40;
+        text-align: center;
+    }
+
+    .nuevo-contrato-btn {
+        margin-bottom: 20px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: 600;
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        color: white;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+        .nuevo-contrato-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #0056b3, #007bff);
+        }
+
+    .alert {
+        margin-top: 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+
+    .loading-text, .no-data-text {
+        font-size: 1.2rem;
+        color: #6c757d;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .loading-text i, .no-data-text i {
+            margin-right: 8px;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+        margin-top: 20px;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-custom {
+        border-collapse: collapse;
+    }
+
+    .table th {
+        text-align: center;
+        font-weight: bold;
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table td, .table th {
+        padding: 12px 15px;
+        vertical-align: middle;
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        overflow: hidden; /* Oculta el desbordamiento */
+        text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+
+    .icon-size {
+        font-size: 20px; /* Ajusta el tamaño del ícono */
+    }
+</style>
+
+@code {
+    private List<Presupuesto> listaPresupuestos;
+    private Dictionary<int, string> nombresFormasdepago = new();
+    private Dictionary<int, string> nombresObras = new();
+    private Dictionary<int, string> nombresItemstipo = new();
+    private string Mensaje = "";
+
+    public class SwalResult
+    {
+        public bool? isConfirmed { get; set; }
+        public bool? isDenied { get; set; }
+        public bool? isDismissed { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Leer();
+    }
+
+    private async Task Leer()
+    {
+        var resp = await http.Get<List<Presupuesto>>("api/Presupuestos");
+        if (!resp.Error)
+        {
+            listaPresupuestos = resp.Respuesta;
+            await CargarFormasdepago();
+            await CargarObras();
+            await CargarItemstipo();
+        }
+        else
+        {
+            Mensaje = await resp.ObtenerError();
+        }
+    }
+
+    private async Task CargarFormasdepago()
+    {
+        var resp = await http.Get<List<FormadePago>>("api/FormasdePago"); // Cambia el endpoint según tu API
+        if (!resp.Error)
+        {
+            foreach (var formadepago in resp.Respuesta)
+            {
+                nombresFormasdepago[formadepago.Id] = $"{formadepago.Nombre}";
+            }
+        }
+    }
+
+    private async Task CargarObras()
+    {
+        var resp = await http.Get<List<Obra>>("api/Contratos"); // Cambia el endpoint según tu API
+        if (!resp.Error)
+        {
+            foreach (var obra in resp.Respuesta)
+            {
+                nombresObras[obra.Id] = $"{obra.ClienteId}";
+            }
+        }
+    }
+
+    private async Task CargarItemstipo()
+    {
+        var resp = await http.Get<List<ItemTipo>>("api/ItemsTipo"); // Cambia el endpoint según tu API
+        if (!resp.Error)
+        {
+            foreach (var itemtipo in resp.Respuesta)
+            {
+                nombresItemstipo[itemtipo.Id] = $"{itemtipo.Nombre}";
+            }
+        }
+    }
+
+    private async Task Editar(int id)
+    {
+        Navigation.NavigateTo($"/Presupuestos/editar/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!");
+
+        if (result?.isConfirmed == true)
+        {
+            await Borrar(id);
+            await js.InvokeVoidAsync("Swal.fire", "Exito!", "Documento Eliminado");
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Eliminación cancelada.");
+        }
+    }
+
+    private async Task Borrar(int id)
+    {
+        var respuesta = await http.Delete<Presupuesto>($"api/Presupuestos/{id}");
+        if (respuesta.Error)
+        {
+            Mensaje = "No se pudo borrar el presupuesto";
+        }
+        await Leer();
+    }
+}
