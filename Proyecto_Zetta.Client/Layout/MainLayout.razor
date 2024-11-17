@@ -1,15 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <main>
-
-        <article class="content px-4">
+    <main class="content px-4" style="padding-bottom: 60px;">
+        <article>
             @Body
         </article>
     </main>
 
-    <!-- NavMenu colocado en la mitad inferior de la pantalla -->
-    <div class="fixed-bottom">
+    <!-- Colocamos NavMenu al final, pero sin usar "fixed" -->
+    <div>
         <NavMenu />
     </div>
 </div>

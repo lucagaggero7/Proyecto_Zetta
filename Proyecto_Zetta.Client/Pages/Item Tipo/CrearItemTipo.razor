@@ -33,6 +33,18 @@
             <ValidationMessage For="@(() => itemtipo.PrecioFinal)" />
         </div>
 
+        <!-- Selección de materiales -->
+        <div class="form-group">
+            <label>Seleccionar Materiales</label>
+            <select class="form-control" multiple @onchange="OnMaterialChange">
+                @foreach (var material in materiales)
+                {
+                    <option value="@material.Id">@material.Nombre</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => itemtipo.MaterialesIds)" />
+        </div>
+
         <div class="button-group">
             <button class="btn btn-primary" type="submit">Aceptar</button>
             <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
@@ -67,11 +79,6 @@
             color: #343a40;
         }
 
-    .checkbox-container {
-        display: flex;
-        align-items: center;
-    }
-
     .form-control {
         padding: 10px;
         font-size: 1rem;
@@ -86,39 +93,45 @@
         padding: 10px 20px;
         font-weight: bold;
     }
-
-    .checkbox-container {
-        display: flex;
-        align-items: center;
-    }
-
-        .checkbox-container input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            accent-color: #007bff;
-            border: 2px solid #007bff;
-            border-radius: 4px;
-        }
-
-        .checkbox-container label {
-            font-weight: bold;
-            color: #343a40;
-            font-size: 1.1rem;
-        }
 </style>
 
 @code {
     private CrearItemTipoDTO itemtipo = new CrearItemTipoDTO();
+    private List<Material> materiales = new List<Material>(); // Lista de materiales disponibles
+    private List<int> selectedMaterialIds = new List<int>(); // Materiales seleccionados
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Cargar los materiales desde la API
+        var httpRespuesta = await http.Get<List<Material>>("api/Materiales");
+        if (!httpRespuesta.Error)
+        {
+            materiales = httpRespuesta.Respuesta;
+        }
+    }
+
+    // Método para manejar el cambio de selección de materiales
+    private void OnMaterialChange(ChangeEventArgs e)
+    {
+        var selectedValues = (string[])e.Value;
+        selectedMaterialIds = selectedValues?.Select(int.Parse).ToList() ?? new List<int>();
+    }
 
     private async Task Grabar()
     {
+        // Asignar los materiales seleccionados a la propiedad MaterialIds
+        itemtipo.MaterialesIds = selectedMaterialIds;
+
         var httpRespuesta = await http.Post<CrearItemTipoDTO>("api/ItemsTipo", itemtipo);
-        if (httpRespuesta.Error)
+        if (!httpRespuesta.Error)
         {
+            nav.NavigateTo("/ItemsTipo");
+        }
+        else
+        {
+            // Manejo de error
             var body = httpRespuesta.HttpResponseMessage;
         }
-        nav.NavigateTo("/ItemsTipo");
     }
 
     private void Cancelar()
