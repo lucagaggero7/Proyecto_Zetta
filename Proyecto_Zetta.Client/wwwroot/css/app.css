@@ -157,3 +157,38 @@ code {
     justify-content: center;
     align-items: center;
 }
+
+
+.btn-edit {
+    background-color: transparent;
+    border: 2px solid #007bff;
+    color: #007bff; 
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    padding: 3px 6px;
+    margin: 2px;
+}
+
+.btn-delete {
+    background-color: transparent;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    padding: 3px 6px;
+    margin: 2px;
+}
+
+.btn-edit:hover {
+    background-color: #007bff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+}
