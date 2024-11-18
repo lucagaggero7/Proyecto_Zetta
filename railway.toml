@@ -1,6 +1,6 @@
 [build]
-builder = "dotnet-sdk"
-dotnet_sdk_version = "8.0"
+dockerfile = "Proyecto_Zetta.Server/Dockerfile"
+
 
 [deploy]
   # Puerto que Railway asignará a tu aplicación
