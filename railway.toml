@@ -1,16 +1,8 @@
 [build]
-dockerfile = "Proyecto_Zetta.Server/Dockerfile"
+builder = "dockerfile"
+dockerfilePath = "Proyecto_Zetta.Server/Dockerfile"
 
 [deploy]
-  # Puerto que Railway asignará a tu aplicación
-  port = "7201"
-
-  # Comando que Railway usará para ejecutar el proyecto
-  cmd = "dotnet Proyecto_Zetta.Server.dll"
-
-[deploy.env]
-  DOTNET_SDK_VERSION = "8.0"
-  ASPNETCORE_ENVIRONMENT = "Production"
-  ASPNETCORE_URLS = "http://+:7201"
-  DATABASE_URL = "tu_cadena_de_conexion"
-  NIXPACKS_CSHARP_SDK_VERSION = "8.0"
+startCommand = "dotnet Proyecto_Zetta.Server.dll"
+restartPolicyType = "always"
+healthcheckPath = "/health"
