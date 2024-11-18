@@ -6,9 +6,9 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // DEPLOY CONFIG
-var port = Environment.GetEnvironmentVariable("PORT") ?? "7201";
-builder.WebHost.UseUrls($"https://*:{port}");
-//
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8888";
+builder.WebHost.UseUrls($"http://*:{port}");
+
 builder.Services.AddHealthChecks();
 //
 
@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
 });
 
 // Database context configuration
-builder.Services.AddDbContext<Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("conn"))); // Usar el connection string del archivo de configuración
+builder.Services.AddDbContext<Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("conn"))); // Usar el connection string del archivo de configuraci?n
 
 builder.Services.AddAutoMapper(typeof(Program));
 
