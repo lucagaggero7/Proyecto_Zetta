@@ -5,7 +5,6 @@ EXPOSE 7201
 
 # Fase de construcción para el proyecto Server
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
 
 # Copiar los archivos de los proyectos de la solución
 COPY ../Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj Proyecto_Zetta.Server/
