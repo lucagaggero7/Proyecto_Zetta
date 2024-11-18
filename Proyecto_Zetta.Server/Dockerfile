@@ -8,16 +8,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copiar los archivos de los proyectos de la solución
-COPY Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj Proyecto_Zetta.Server/
-COPY Proyecto_Zetta.Client/Proyecto_Zetta.Client.csproj Proyecto_Zetta.Client/
-COPY Proyecto_Zetta.Shared/Proyecto_Zetta.Shared.csproj Proyecto_Zetta.Shared/
-COPY Proyecto_Zetta.DB/Proyecto_Zetta.DB.csproj Proyecto_Zetta.DB/
+COPY ../Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj Proyecto_Zetta.Server/
+COPY ../Proyecto_Zetta.Client/Proyecto_Zetta.Client.csproj Proyecto_Zetta.Client/
+COPY ../Proyecto_Zetta.Shared/Proyecto_Zetta.Shared.csproj Proyecto_Zetta.Shared/
+COPY ../Proyecto_Zetta.DB/Proyecto_Zetta.DB.csproj Proyecto_Zetta.DB/
 
 # Restaurar dependencias
 RUN dotnet restore Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj
 
 # Copiar todos los archivos del proyecto al contenedor
-COPY . . 
+COPY ../ . 
 
 # Construir el proyecto
 WORKDIR /src/Proyecto_Zetta.Server
@@ -33,7 +33,7 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Copiar los archivos estáticos de Blazor WebAssembly
-COPY Proyecto_Zetta.Client/wwwroot /app/wwwroot
+COPY ../Proyecto_Zetta.Client/wwwroot /app/wwwroot
 
 # Establecer el punto de entrada para la aplicación
 ENTRYPOINT ["dotnet", "Proyecto_Zetta.Server.dll"]
