@@ -1,7 +1,6 @@
 [build]
 dockerfile = "Proyecto_Zetta.Server/Dockerfile"
 
-
 [deploy]
   # Puerto que Railway asignará a tu aplicación
   port = "7201"
@@ -14,4 +13,3 @@ dockerfile = "Proyecto_Zetta.Server/Dockerfile"
   ASPNETCORE_ENVIRONMENT = "Production"
   ASPNETCORE_URLS = "http://+:7201"
   DATABASE_URL = "tu_cadena_de_conexion"
-

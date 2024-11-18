@@ -16,7 +16,7 @@ COPY ../Proyecto_Zetta.DB/Proyecto_Zetta.DB.csproj Proyecto_Zetta.DB/
 RUN dotnet restore Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj
 
 # Copiar todos los archivos del proyecto al contenedor
-COPY ../ . 
+COPY ../ .
 
 # Construir el proyecto
 WORKDIR /src/Proyecto_Zetta.Server
