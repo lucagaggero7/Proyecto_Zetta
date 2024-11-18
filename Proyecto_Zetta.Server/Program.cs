@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // DEPLOY CONFIG
-var port = Environment.GetEnvironmentVariable("PORT") ?? "7201";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"https://*:{port}");
 //
 builder.Services.AddHealthChecks();
