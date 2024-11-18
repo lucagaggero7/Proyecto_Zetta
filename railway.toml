@@ -8,8 +8,9 @@
   # Comando que Railway usará para ejecutar el proyecto
   cmd = "dotnet Proyecto_Zetta.Server.dll"
 
-  # Variables de entorno (si las necesitas)
-  [deploy.env]
+[deploy.env]
+  DOTNET_SDK_VERSION = "8.0"
   ASPNETCORE_ENVIRONMENT = "Production"
-  ASPNETCORE_URLS = "http://+:7201"  # Escuchar en el puerto 7201
-  DATABASE_URL = "tu_cadena_de_conexion"  # Asegúrate de configurar tu base de datos
+  ASPNETCORE_URLS = "http://+:7201"
+  DATABASE_URL = "tu_cadena_de_conexion"
+
