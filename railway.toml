@@ -1,5 +1,6 @@
 [build]
-  dockerfile = "./Dockerfile"  # Ruta a tu Dockerfile
+builder = "dotnet-sdk"
+dotnet_sdk_version = "8.0"
 
 [deploy]
   # Puerto que Railway asignará a tu aplicación
