@@ -8,17 +8,6 @@
 <EditForm Model="obra" OnValidSubmit="Grabar">
     <DataAnnotationsValidator />
 
-    <div class="form-group">
-        <label>Estado</label>
-        <div>
-            <select class="form-control" @bind="obra.Estado">
-                <option value="">Seleccione un estado</option>
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
-            </select>
-            <ValidationMessage For="@(() => obra.Estado)" />
-        </div>
-    </div>
 
     <div class="form-group">
         <label>Descripcion</label>
@@ -28,13 +17,6 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label>Fecha de Alta</label>
-        <div>
-            <InputDate class="form-control" @bind-Value="@obra.FechaAlta" />
-            <ValidationMessage For="@(() => obra.FechaAlta)" />
-        </div>
-    </div>
 
     <div class="form-group">
         <label>Anexar Servicio</label>
@@ -85,6 +67,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        obra.Estado = "Activo";
         obra.FechaAlta = DateTime.Today;
         await CargarInstaladores();
         await CargarClientes();

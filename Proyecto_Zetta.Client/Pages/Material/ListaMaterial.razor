@@ -8,7 +8,7 @@
 <div class="container">
     <h3 class="title">Lista de Materiales</h3>
 
-    <a class="btn btn-primary nuevo-cliente-btn" href="/Materiales/crear">
+    <a class="btn btn-add" href="/Materiales/crear">
         <i class="bi bi-plus-circle me-2"></i> Nuevo Material
     </a>
 
@@ -191,7 +191,7 @@
 
     private async Task Eliminar(int id)
     {
-        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!");
+        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!", "Si, eliminarlo.");
 
         if (result?.isConfirmed == true)
         {

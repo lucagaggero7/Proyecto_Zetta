@@ -12,9 +12,37 @@ a, .btn-link {
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
+    background-color: #007bff;
     border-color: #1861ac;
 }
+
+.btn-add {
+    color: #fff; /* Color del texto por defecto */
+    background-color: #007bff;
+    border-color: #1861ac;
+    border-radius: 25px;
+    padding: 10px 15px; /* Ajusta el padding */
+    display: inline-flex; /* Utiliza flexbox para alinear icono y texto */
+    align-items: center; /* Centra el icono y el texto verticalmente */
+    justify-content: center; /* Asegura que ambos estén centrados horizontalmente */
+    font-size: 14px; /* Ajusta el tamaño del texto */
+    font-weight: 600; /* Hace que la fuente sea semi-bold */
+    height: 40px; /* Mantén la altura */
+    transition: all 0.3s ease; /* Agrega una transición suave para el cambio de sombra */
+}
+
+    .btn-add:hover {
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5); /* Sombra dinámica */
+        background-color: #0056b3; /* Cambia el color de fondo al pasar el mouse */
+        color: #fff; /* Asegura que el color del texto no cambie */
+    }
+
+    .btn-add i {
+        font-size: 18px; /* Ajusta el tamaño del icono */
+        margin-right: 8px; /* Espacio entre el icono y el texto */
+    }
+
+
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -191,4 +219,21 @@ code {
     background-color: #dc3545;
     color: white;
     transform: translateY(-2px);
+}
+
+.btn-warning {
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+    .btn-warning:hover {
+        background-color: #e67e22;
+        border-color: #e67e22;
+    }
+
+button.disabled {
+    background-color: #cdcdcd !important;
+    border-color: #cdcdcd !important;
+    pointer-events: none;
+    opacity: 0.5;
 }

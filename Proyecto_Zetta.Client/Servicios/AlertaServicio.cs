@@ -10,7 +10,7 @@ public class AlertaServicio
         _jsRuntime = jsRuntime;
     }
 
-    public async Task<SwalResult> ConfirmDeletion(string title, string text)
+    public async Task<SwalResult> ConfirmDeletion(string title, string text, string confirmbtn)
     {
         // Invoca el script de SweetAlert con los parámetros necesarios
         return await _jsRuntime.InvokeAsync<SwalResult>("Swal.fire", new
@@ -21,7 +21,7 @@ public class AlertaServicio
             showCancelButton = true,
             confirmButtonColor = "#3085d6",
             cancelButtonColor = "#d33",
-            confirmButtonText = "Sí, eliminarlo!",
+            confirmButtonText = confirmbtn,
             cancelButtonText = "Cancelar"
         });
     }

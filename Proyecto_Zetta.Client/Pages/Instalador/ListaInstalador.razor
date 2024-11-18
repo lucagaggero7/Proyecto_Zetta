@@ -8,7 +8,7 @@
 <div class="container">
     <h3 class="title">Lista de Instaladores</h3>
 
-    <a class="btn btn-primary nuevo-instalador-btn" href="/Instaladores/crear">
+    <a class="btn btn-add" href="/Instaladores/crear">
         <i class="bi bi-plus-circle me-2"></i> Nuevo Instalador
     </a>
 
@@ -215,7 +215,7 @@
 
     private async Task Eliminar(int id)
     {
-        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!");
+        var result = await Alerta.ConfirmDeletion("¿Está seguro?", "¡No podrás revertir esto!", "Si, eliminarlo.");
 
         if (result?.isConfirmed == true)
         {
