@@ -1,8 +1,17 @@
+# railway.toml
+
 [build]
-builder = "dockerfile"
-dockerfilePath = "Proyecto_Zetta.Server/Dockerfile"
+  dockerfile = "./Proyecto_Zetta.Server/Dockerfile" # Ruta al Dockerfile del proyecto Server
 
 [deploy]
-startCommand = "dotnet Proyecto_Zetta.Server.dll"
-restartPolicyType = "always"
-healthcheckPath = "/health"
+  # Puerto que Railway asignará a tu aplicación
+  port = "7201"
+
+  # Comando que Railway usará para ejecutar el proyecto
+  cmd = "dotnet Proyecto_Zetta.Server.dll"
+
+  # Variables de entorno (si las necesitas)
+  [deploy.env]
+  ASPNETCORE_ENVIRONMENT = "Production"
+  ASPNETCORE_URLS = "http://+:7201"  # Escucha en el puerto 7201
+  DATABASE_URL = "tu_cadena_de_conexion"  # Asegúrate de configurar tu base de datos
