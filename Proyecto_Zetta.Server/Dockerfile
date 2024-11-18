@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 # Configura el directorio de trabajo
 WORKDIR /src
 
-# Copia los archivos de los proyectos
+# Copia los archivos de los proyectoss
 COPY ["Proyecto_Zetta.Server/Proyecto_Zetta.Server.csproj", "Proyecto_Zetta.Server/"]
 COPY ["Proyecto_Zetta.Client/Proyecto_Zetta.Client.csproj", "Proyecto_Zetta.Client/"]
 COPY ["Proyecto_Zetta.DB/Proyecto_Zetta.DB.csproj", "Proyecto_Zetta.DB/"]
