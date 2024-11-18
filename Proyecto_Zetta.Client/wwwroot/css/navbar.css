@@ -38,10 +38,9 @@
         transform: scale(1.1);
     }
 
-    /* Resalta el enlace activo */
     .nav-link.active {
-        color: #007bff; /* Cambia el color del enlace activo */
-        font-weight: bold; /* Resalta el texto del enlace activo */
+        color: #007bff;
+        font-weight: bold;
     }
 
 .navbar .btn {
@@ -55,11 +54,41 @@
     .navbar .btn:hover {
         background-color: #0056b3;
     }
-/* Clase especial para desactivar la selección activa */
-.nav-link.no-active {
-    color: #ccc;
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 8px;
+    }
+
+    .nav-items {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-link {
+        font-size: 1rem;
+    }
+
+    .navbar .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
 }
 
-    .nav-link.no-active:hover {
-        color: #fff;
+@media (max-width: 480px) {
+    .navbar-brand {
+        font-size: 1rem;
     }
+
+    .nav-link {
+        font-size: 0.9rem;
+    }
+
+    .navbar .btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
