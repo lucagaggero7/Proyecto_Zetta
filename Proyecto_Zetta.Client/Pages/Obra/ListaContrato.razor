@@ -5,6 +5,7 @@
 @inject IJSRuntime js
 @inject AlertaServicio Alerta
 @inject NavigationManager Navigation
+@inject HttpClient Http
 
 <div class="container">
     <h3 class="title">Lista de Contratos</h3>
@@ -126,7 +127,7 @@
         </div>
     }
 </div>
-
+<div>@entorno</div>
 
 <style>
     .container {
@@ -206,6 +207,7 @@
     private List<Presupuesto> presupuestos = new();
     private string Mensaje = "";
     private int idSeleccionado = 0; // ID de la obra seleccionada para expandir
+    private string entorno;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -216,7 +218,7 @@
         {
             idSeleccionado = contratoId; // Expandir el contrato con el ID correspondiente
         }
-
+        entorno = await Http.GetStringAsync("api/configuracion/entorno");
         await Leer();
     }
 
@@ -234,6 +236,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        entorno = await Http.GetStringAsync("api/configuracion/entorno");
         await Leer();
     }
 

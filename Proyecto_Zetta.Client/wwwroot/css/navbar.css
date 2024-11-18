@@ -1,0 +1,65 @@
+﻿.navbar {
+    background-color: #212529;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar-brand {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-items {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-link {
+    color: #ccc;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 0.5rem;
+}
+
+    .nav-link i {
+        font-size: 1.5rem;
+    }
+
+    .nav-link:hover {
+        color: #fff;
+        transform: scale(1.1);
+    }
+
+    /* Resalta el enlace activo */
+    .nav-link.active {
+        color: #007bff; /* Cambia el color del enlace activo */
+        font-weight: bold; /* Resalta el texto del enlace activo */
+    }
+
+.navbar .btn {
+    padding: 8px 16px;
+    border-radius: 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+    .navbar .btn:hover {
+        background-color: #0056b3;
+    }
+/* Clase especial para desactivar la selección activa */
+.nav-link.no-active {
+    color: #ccc;
+}
+
+    .nav-link.no-active:hover {
+        color: #fff;
+    }

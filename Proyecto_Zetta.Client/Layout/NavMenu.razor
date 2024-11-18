@@ -1,54 +1,76 @@
-﻿<div class="navbar navbar-dark fixed-bottom bg-success">
-    <div class="container-fluid justify-content-center d-flex align-items-center">
+﻿@inject HttpClient Http
 
-        <div class="nav-item px-3 d-flex align-items-center">
-            <NavLink class="nav-link d-flex align-items-center" href="/Contratos">
+
+<div class="navbar navbar-dark fixed-bottom">
+    <div class="container-fluid justify-content-around d-flex align-items-center">
+        <!-- Contratos -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="/Contratos" activeClass="active">
                 <i class="bi bi-file-binary-fill nav-icon"></i>
                 <span>Contratos</span>
             </NavLink>
         </div>
 
-        <div class="nav-item px-3 d-flex align-items-center">
-            <NavLink class="nav-link d-flex align-items-center" href="/Presupuestos">
+        <!-- Presupuestos -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="/Presupuestos" activeClass="active">
                 <i class="bi bi-file-binary-fill nav-icon"></i>
                 <span>Presupuestos</span>
             </NavLink>
         </div>
 
-        <div class="nav-item px-3 d-flex align-items-center">
-            <NavLink class="nav-link d-flex align-items-center" href="/Instaladores">
+        <!-- Instaladores -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="/Instaladores" activeClass="active">
                 <i class="bi bi-hammer nav-icon"></i>
                 <span>Instaladores</span>
             </NavLink>
         </div>
 
-        <div class="nav-item px-3 d-flex align-items-center">
-            <NavLink class="nav-link d-flex align-items-center" href="/Clientes">
+        <!-- Clientes -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="/Clientes" activeClass="active">
                 <i class="bi bi-person nav-icon"></i>
                 <span>Clientes</span>
             </NavLink>
         </div>
 
-        <div class="nav-item px-3 d-flex align-items-center">
-            <NavLink class="nav-link d-flex align-items-center" href="/ItemsTipo">
-                <span class="bi bi-bar-chart-steps nav-icon"></span>
+        <!-- Items Tipo -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="/ItemsTipo" activeClass="active">
+                <i class="bi bi-bar-chart-steps nav-icon"></i>
                 <span>Items Tipo</span>
             </NavLink>
         </div>
 
-        <div class="nav-item px-3 d-flex align-items-center">
-            <NavLink class="nav-link d-flex align-items-center" href="/Materiales">
-                <span class="bi bi-bricks nav-icon"></span>
+        <!-- Materiales -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="/Materiales" activeClass="active">
+                <i class="bi bi-bricks nav-icon"></i>
                 <span>Materiales</span>
             </NavLink>
         </div>
 
-        <div class="nav-item px-3 d-flex align-items-center">
-            <NavLink class="nav-link d-flex align-items-center" href="https://localhost:7201/swagger" target="_blank">
-                <i class="fas fa-cogs nav-icon"></i> <!-- Icono de configuraciones -->
-                <span>Swagger</span>
-            </NavLink>
-        </div>
+        <!-- Swagger -->
+        @if (entorno == "Development")
+        {
+            <div class="nav-item">
+                <a class="nav-link no-active" href="https://localhost:7201/swagger" target="_blank">
+                    <i class="fas fa-cogs nav-icon"></i>
+                    <span>Swagger</span>
+                </a>
+            </div>
+        }
 
     </div>
 </div>
+
+@code {
+    private string entorno;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Llamada a la API para obtener el entorno
+        entorno = await Http.GetStringAsync("api/configuracion/entorno");
+    }
+}
