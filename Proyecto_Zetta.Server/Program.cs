@@ -60,8 +60,14 @@ app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    builder.WebHost.UseUrls("https://localhost:7201");
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    // En producción o entornos no desarrollo, se usa el puerto por defecto configurado
+    builder.WebHost.UseUrls($"http://*:{port}");
 }
 
 app.UseHttpsRedirection();
