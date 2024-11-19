@@ -1,0 +1,81 @@
+﻿@page "/Contratos/detalle/{contratoId:int}"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@using System.Net.Http.Json;
+@inject IHttpServicio http
+
+<PageTitle>Detalle de Contrato</PageTitle>
+
+@code {
+    [Parameter] public int contratoId { get; set; }
+
+    private Obra contrato;
+    private string instaladorNombre;
+    private string clienteNombre;
+    private string mensajeError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Obtener los detalles del contrato por su ID
+            var respobra = await http.Get<Obra>($"api/Contratos/GetById/{contratoId}");
+            if (!respobra.Error)
+            {
+                contrato = respobra.Respuesta;
+
+                // Obtener el nombre del instalador
+                var respinstalador = await http.Get<Instalador>($"api/Instaladores/GetById/{contrato.InstaladorId}");
+                if (!respinstalador.Error)
+                {
+                    var instalador = respinstalador.Respuesta;
+                    instaladorNombre = $"{instalador.Nombre} {instalador.Apellido}";
+                }
+
+                // Obtener el nombre del cliente
+                var respcliente = await http.Get<Cliente>($"api/Clientes/GetById/{contrato.ClienteId}");
+                if (!respcliente.Error)
+                {
+                    var cliente = respcliente.Respuesta;
+                    clienteNombre = $"{cliente.Nombre} {cliente.Apellido}";
+                }
+   
+            }
+
+            else
+            {
+                mensajeError = "No se pudo cargar la información del contrato.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = "Error al cargar los detalles: " + ex.Message;
+        }
+    }
+}
+
+@if (mensajeError != null)
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else if (contrato == null)
+{
+    <p>Cargando detalles...</p>
+}
+else
+{
+    <div class="card shadow-lg rounded">
+        <div class="card-body">
+            <h5 class="card-title">@contrato.Descripcion</h5>
+            <p><strong>Estado:</strong> @contrato.Estado</p>
+            <p><strong>Fecha de Alta:</strong> @contrato.FechaAlta.ToString("dd/MM/yyyy")</p>
+            @if (contrato.Estado == "Inactivo")
+            {
+            <p><strong>Fecha de Baja:</strong> @(contrato.FechaBaja?.ToString("dd/MM/yyyy") ?? "No disponible")</p>
+            }
+            <p><strong>Anexar Servicio:</strong> @contrato.AnexarServicio</p>
+            <p><strong>Instalador:</strong> @instaladorNombre</p>
+            <p><strong>Cliente:</strong> @clienteNombre</p>
+        </div>
+    </div>
+}

@@ -5,83 +5,96 @@
 
 <h3>Nuevo Presupuesto</h3>
 
-<EditForm Model="presupuesto" OnValidSubmit="Grabar">
-    <DataAnnotationsValidator />
-
-    <div class="form-group">
-        <label>Tipo</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@presupuesto.Tipo" />
-            <ValidationMessage For="@(() => presupuesto.Tipo)" />
-        </div>
+<!-- Contenedor de la tarjeta con sombra -->
+<div class="card shadow-lg p-4" style="max-width: 800px; margin: auto;">
+    <div class="card-header">
+        <h4>Formulario de Presupuesto</h4>
     </div>
 
-    <div class="form-group">
-        <label>Materiales Incluidos</label>
-        <div class="form-check">
-            <InputCheckbox class="form-check-input" @bind-Value="@presupuesto.MaterialesIncl" />
-            <ValidationMessage For="@(() => presupuesto.MaterialesIncl)" />
+    <EditForm Model="presupuesto" OnValidSubmit="Grabar">
+        <DataAnnotationsValidator />
+
+        <div class="card-body">
+            <div class="form-group">
+                <label>Tipo</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@presupuesto.Tipo" />
+                    <ValidationMessage For="@(() => presupuesto.Tipo)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="materialesIncluidos" class="d-block">Materiales Incluidos</label>
+                <div class="d-flex align-items-center">
+                    <!-- Switch -->
+                    <input type="checkbox" class="form-check-input-modern" id="materialesIncluidos" @bind="presupuesto.MaterialesIncl" />
+
+                    <!-- Texto Sí/No -->
+                    <span class="ms-2">@((presupuesto.MaterialesIncl ? "Sí" : "No"))</span>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label>Insumos</label>
+                <div>
+                    <InputNumber class="form-control" @bind-Value="@presupuesto.Insumos" />
+                    <ValidationMessage For="@(() => presupuesto.Insumos)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mano de obra</label>
+                <div>
+                    <InputNumber class="form-control" @bind-Value="@presupuesto.ManodeObra" />
+                    <ValidationMessage For="@(() => presupuesto.ManodeObra)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Forma de Pago</label>
+                <div>
+                    <select class="form-control" @bind="presupuesto.FormadePagoId">
+                        <option value="">Seleccione una forma de pago</option>
+                        @foreach (var formasdepago in listaFormasdePago)
+                        {
+                            <option value="@formasdepago.Id">@formasdepago.Nombre</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => presupuesto.FormadePagoId)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Item Tipo</label>
+                <div>
+                    <select class="form-control" @bind="presupuesto.ItemTipoId">
+                        <option value="">Seleccione un item tipo</option>
+                        @foreach (var itemstipo in listaItemsTipo)
+                        {
+                            <option value="@itemstipo.Id">@itemstipo.Nombre</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => presupuesto.ItemTipoId)" />
+                </div>
+            </div>
+
+            <br />
+
+            <!-- Botones de acción -->
+            <div class="form-group">
+                <button class="btn btn-primary btn-lg" type="submit">Aceptar</button>
+                <button class="btn btn-secondary btn-lg" @onclick="Cancelar">Cancelar</button>
+            </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <label>Insumos</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@presupuesto.Insumos" />
-            <ValidationMessage For="@(() => presupuesto.Insumos)" />
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>Mano de obra</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@presupuesto.ManodeObra" />
-            <ValidationMessage For="@(() => presupuesto.ManodeObra)" />
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <label>Forma de Pago</label>
-        <div>
-            <select class="form-control" @bind="presupuesto.FormadePagoId">
-                <option value="">Seleccione una forma de pago</option>
-                @foreach (var formasdepago in listaFormasdePago)
-                {
-                    <option value="@formasdepago.Id">@formasdepago.Nombre</option>
-                }
-            </select>
-            <ValidationMessage For="@(() => presupuesto.FormadePagoId)" />
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <label>Item Tipo</label>
-        <div>
-            <select class="form-control" @bind="presupuesto.ItemTipoId">
-                <option value="">Seleccione un item tipo</option>
-                @foreach (var itemstipo in listaItemsTipo)
-                {
-                    <option value="@itemstipo.Id">@itemstipo.Nombre</option>
-                }
-            </select>
-            <ValidationMessage For="@(() => presupuesto.ItemTipoId)" />
-        </div>
-    </div>
-
-    <br />
-
-    <button class="btn btn-primary" type="submit">Aceptar</button>
-    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
-</EditForm>
+    </EditForm>
+</div>
 
 @code {
-
     [Parameter] public int contratoId { get; set; }
     private CrearPresupuestoDTO presupuesto = new CrearPresupuestoDTO();
     private List<FormadePago> listaFormasdePago = new List<FormadePago>();
-    private List<Obra> listaObras = new List<Obra>();
     private List<ItemTipo> listaItemsTipo = new List<ItemTipo>();
 
     protected override async Task OnInitializedAsync()
@@ -117,16 +130,6 @@
         public string Nombre { get; set; }
     }
 
-    public class Obra
-    {
-        public int Id { get; set; }
-        public string Estado { get; set; }
-        public string Descripcion { get; set; }
-        public DateTime? FechaBaja { get; set; }
-        public DateTime? FechaAlta { get; set; }
-        public string AnexarServicio { get; set; }
-    }
-
     public class ItemTipo
     {
         public int Id { get; set; }
@@ -134,7 +137,6 @@
         public long Insumos { get; set; }
         public long ManodeObra { get; set; }
         public long PrecioFinal { get; set; }
-
     }
 
     private async Task Grabar()

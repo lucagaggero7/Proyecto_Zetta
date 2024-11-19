@@ -5,60 +5,76 @@
 
 <h3>Nuevo Contrato</h3>
 
-<EditForm Model="obra" OnValidSubmit="Grabar">
-    <DataAnnotationsValidator />
-
-
-    <div class="form-group">
-        <label>Descripcion</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@obra.Descripcion" />
-            <ValidationMessage For="@(() => obra.Descripcion)" />
-        </div>
+<!-- Contenedor de la tarjeta con sombra -->
+<div class="card shadow-lg p-4" style="max-width: 800px; margin: auto;">
+    <div class="card-header">
+        <h4>Formulario de Contrato</h4>
     </div>
 
+    <EditForm Model="obra" OnValidSubmit="Grabar">
+        <DataAnnotationsValidator />
 
-    <div class="form-group">
-        <label>Anexar Servicio</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@obra.AnexarServicio" />
-            <ValidationMessage For="@(() => obra.AnexarServicio)" />
+        <div class="card-body">
+            <div class="form-group">
+                <label>Descripcion</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@obra.Descripcion" />
+                    <ValidationMessage For="@(() => obra.Descripcion)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="anexarServicio">Anexar Servicio</label>
+                <div>
+                    <select id="anexarServicio" class="form-control" @bind="obra.AnexarServicio">
+                        <option value="N/A">N/A</option>
+                        <option value="Mamposteria">Mampostería</option>
+                        <option value="Pintura">Pintura</option>
+                        <option value="Plomeria">Plomería</option>
+                        <option value="Electricidad">Electricidad</option>
+                    </select>
+                    <ValidationMessage For="@(() => obra.AnexarServicio)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Instalador</label>
+                <div>
+                    <select class="form-control" @bind="obra.InstaladorId">
+                        <option value="">Seleccione un instalador</option>
+                        @foreach (var instalador in listaInstaladores)
+                        {
+                            <option value="@instalador.Id">@instalador.NombreCompleto</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => obra.InstaladorId)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Cliente</label>
+                <div>
+                    <select class="form-control" @bind="obra.ClienteId">
+                        <option value="">Seleccione un cliente</option>
+                        @foreach (var clientes in listaClientes)
+                        {
+                            <option value="@clientes.Id">@clientes.NombreCompleto</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => obra.ClienteId)" />
+                </div>
+            </div>
+
+            <br />
+
+            <div class="form-group">
+                <button class="btn btn-primary btn-lg" type="submit">Aceptar</button>
+                <button class="btn btn-secondary btn-lg" @onclick="Cancelar">Cancelar</button>
+            </div>
+
         </div>
-    </div>
-
-    <div class="form-group">
-        <label>Instalador</label>
-        <div>
-            <select class="form-control" @bind="obra.InstaladorId">
-                <option value="">Seleccione un instalador</option>
-                @foreach (var instalador in listaInstaladores)
-                {
-                    <option value="@instalador.Id">@instalador.NombreCompleto</option>
-                }
-            </select>
-            <ValidationMessage For="@(() => obra.InstaladorId)" />
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>Cliente</label>
-        <div>
-            <select class="form-control" @bind="obra.ClienteId">
-                <option value="">Seleccione un cliente</option>
-                @foreach (var clientes in listaClientes)
-                {
-                    <option value="@clientes.Id">@clientes.NombreCompleto</option>
-                }
-            </select>
-            <ValidationMessage For="@(() => obra.ClienteId)" />
-        </div>
-    </div>
-
-    <br />
-
-    <button class="btn btn-primary" type="submit">Aceptar</button>
-    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
-</EditForm>
+    </EditForm>
+</div>
 
 @code {
     private CrearObraDTO obra = new CrearObraDTO();
