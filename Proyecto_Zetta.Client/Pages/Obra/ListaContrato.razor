@@ -39,35 +39,36 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 @item.Descripcion
-                                <span class="badge text-bg-@GetEstadoBadge(item.Estado)">
+                                <span class="@GetEstadoClase(item.Estado)">
                                     @item.Estado
-                                </span>
+                                </span><br />
                             </h5>
                             <p class="card-text">
                                 <strong>Fecha de Alta:</strong> @item.FechaAlta.ToString("dd/MM/yyyy")<br />
                                 <strong>Instalador:</strong> @(nombresInstaladores.ContainsKey(item.InstaladorId) ? nombresInstaladores[item.InstaladorId] : "Desconocido")<br />
                                 <strong>Cliente:</strong> @(nombresClientes.ContainsKey(item.ClienteId) ? nombresClientes[item.ClienteId] : "Desconocido")
                             </p>
-                            <div class="d-flex justify-content-between">
+
+                            <!-- Subcontenedor para agrupar botones -->
+                            <div class="button-group">
                                 <button class="btn btn-expand btn-sm" @onclick="() => ExpandirPresupuestos(item.Id)" title="Ver presupuestos">
-                                    <i class="bi bi-chevron-down"></i> <!-- Icono de expansión -->
+                                    <i class="bi bi-chevron-down"></i>
                                 </button>
-                                <div>
-                                    <button class="btn btn-edit btn-sm" @onclick="() => Editar(item.Id)" title="Editar contrato">
-                                        <i class="bi bi-pencil-fill icon-size"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" @onclick="() => Eliminar(item.Id)" title="Eliminar contrato">
-                                        <i class="bi bi-trash-fill icon-size"></i>
-                                    </button>
-                                    <button class="btn btn-primary btn-sm" @onclick="() => AgregarPresupuesto(item.Id)" title="Agregar Presupuesto">
-                                        <i class="bi bi-plus-circle icon-size"></i>
-                                    </button>
-                                    <button class="btn btn-warning btn-sm @(item.Estado == "Inactivo" ? "disabled" : "")" @onclick="() => BajaObra(item.Id)" title="Dar de baja">
-                                        <i class="bi bi-file-earmark-excel icon-size"></i>
-                                    </button>
-                                </div>
+                                <button class="btn btn-edit btn-sm" @onclick="() => Editar(item.Id)" title="Editar contrato">
+                                    <i class="bi bi-pencil-fill icon-size"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" @onclick="() => Eliminar(item.Id)" title="Eliminar contrato">
+                                    <i class="bi bi-trash-fill icon-size"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm" @onclick="() => AgregarPresupuesto(item.Id)" title="Agregar Presupuesto">
+                                    <i class="bi bi-plus-circle icon-size"></i>
+                                </button>
+                                <button class="btn btn-warning btn-sm @(item.Estado == "Inactivo" ? "disabled" : "")" @onclick="() => BajaObra(item.Id)" title="Dar de baja">
+                                    <i class="bi bi-file-earmark-excel icon-size"></i>
+                                </button>
                             </div>
                         </div>
+
                         @if (item.Id == idSeleccionado)
                         {
                             <div class="card-footer">
@@ -95,6 +96,7 @@
                             </div>
                         }
                     </div>
+
                 </div>
             }
         </div>
@@ -133,49 +135,86 @@
     }
 
     .card {
-        margin-bottom: 20px; /* Espacio entre tarjetas */
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        background-color: white;
+        border: none; /* Elimina el borde azul */
+        border-radius: 12px; /* Bordes redondeados */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Fondo con un ligero degradado */
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación al pasar el mouse */
     }
 
-    .card-header {
-        padding: 15px;
-        background-color: #007bff;
-        color: white;
-        font-weight: bold;
-        border-radius: 8px 8px 0 0;
-    }
-
-    .card-body {
-        padding: 15px;
-    }
-
-        .card-body h5 {
-            margin-top: 0; /* Elimina el margen superior del título dentro del card */
+        .card:hover {
+            transform: translateY(-10px); /* Efecto de elevación */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
         }
 
+    .card-body {
+        padding: 20px;
+        color: #333; /* Texto más oscuro y agradable */
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 400; /* Cambiamos la fuente a más fina */
+        color: #333; /* Cambiamos el color a un gris oscuro en lugar de azul */
+        margin-bottom: 15px;
+        line-height: 1.5; /* Aseguramos un buen espaciado entre líneas */
+    }
+
+        .card-title span {
+            display: inline-block; /* Asegura que el estado se alinee correctamente */
+            margin-top: 5px; /* Añadimos espacio entre la descripción y el estado */
+        }
+
+    .card-text {
+        font-size: 0.95rem;
+        color: #555; /* Texto gris suave */
+    }
+
     .card-footer {
-        padding: 10px;
-        background-color: #f8f9fa;
-        border-radius: 0 0 8px 8px;
+        border-top: 1px solid #eaeaea; /* Línea superior sutil */
+        padding: 10px 15px;
+        background-color: #f9f9f9; /* Fondo ligeramente gris */
+        border-radius: 0 0 12px 12px; /* Coincide con el redondeo de la card */
     }
 
-    .card .badge {
-        margin-right: 10px;
+    .button-group {
+        display: flex; /* Alinear botones en línea */
+        gap: 10px; /* Espaciado entre botones */
+        padding: 10px; /* Espaciado interno */
+        background-color: #f0f0f0; /* Fondo gris claro */
+        border-radius: 8px; /* Bordes redondeados */
+        justify-content: center; /* Centrar botones dentro del grupo */
+        align-items: center; /* Centrar verticalmente */
+        margin-top: 15px; /* Espaciado respecto al contenido de arriba */
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    }
+
+    .card .btn {
+        width: 40px; /* Tamaño cuadrado de los botones */
+        height: 40px;
+        display: flex;
+        align-items: center; /* Centrar ícono verticalmente */
+        justify-content: center; /* Centrar ícono horizontalmente */
+        font-size: 1rem; /* Tamaño del ícono */
+        padding: 0; /* Sin padding */
+        margin: 0; /* Sin margen entre botones */
+        border-radius: 5px; /* Bordes ligeramente redondeados */
+    }
+
+    .card .btn-sm {
+        display: inline-block;
+        margin: 0; /* Elimina márgenes adicionales */
     }
 
 
-    .icon-size {
-        font-size: 1.2rem;
-    }
 
-    .btn-expand {
-        margin-right: 10px;
-    }
-
-    .d-flex {
-        align-items: center;
+    .card .d-flex {
+        flex-wrap: wrap; /* Permitir que los botones se ajusten si es necesario */
+        gap: 5px; /* Espacio mínimo entre botones */
+        justify-content: start; /* Alinear botones al inicio */
+        align-items: center; /* Asegura que estén centrados verticalmente */
+        padding: 0; /* Sin relleno */
+        margin: 0; /* Sin margen */
     }
 
     .list-group-item {
@@ -187,17 +226,31 @@
             margin-left: 10px;
         }
 
-    /* Colores de estado */
     .text-bg-Activo {
         background-color: #28a745;
+        padding: 2px 6px;
+        color: white;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        font-weight: bold;
     }
 
     .text-bg-Inactivo {
         background-color: #dc3545;
+        padding: 2px 6px;
+        color: white;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        font-weight: bold;
     }
 
     .text-bg-Pendiente {
         background-color: #ffc107;
+        padding: 2px 6px;
+        color: black;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        font-weight: bold;
     }
 </style>
 
@@ -214,14 +267,13 @@
     private string entorno;
 
 
-    // Método para obtener el badge en función del estado
-    private string GetEstadoBadge(string estado)
+    private string GetEstadoClase(string estado)
     {
         return estado switch
         {
-            "Activo" => "badge-success", // Estado Activo -> color verde
-            "Inactivo" => "badge-danger", // Estado Inactivo -> color rojo
-            _ => "badge-secondary" // Otros estados -> color gris
+            "Activo" => "text-success", // Verde
+            "Inactivo" => "text-danger", // Rojo
+            _ => "text-secondary" // Gris por defecto
         };
     }
 
