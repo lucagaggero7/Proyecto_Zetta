@@ -10,7 +10,7 @@
 <div class="container">
     <h3 class="title">Lista de Contratos</h3>
 
-    <a class="btn btn-add" href="/Contratos/crear">
+    <a class="btn btn-add mb-4" href="/Contratos/crear">
         <i class="bi bi-plus-circle me-2"></i> Nuevo Contrato
     </a>
 
@@ -30,103 +30,78 @@
     }
     else
     {
-        <div class="table-responsive shadow-lg rounded">
-            <table class="table table-hover table-custom">
-                <thead class="table-light">
-                    <tr>
-                        <th>Estado</th>
-                        <th>Descripción</th>
-                        <th>Fecha de Alta</th>
-                        <th>Instalador</th>
-                        <th>Cliente</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in listaContratos)
-                    {
-                        <tr>
-                            <td>@item.Estado</td>
-                            <td>@item.Descripcion</td>
-                            <td>@item.FechaAlta.ToString("dd/MM/yyyy")</td>
-                            <td>@(nombresInstaladores.ContainsKey(item.InstaladorId) ? nombresInstaladores[item.InstaladorId] : "Desconocido")</td>
-                            <td>@(nombresClientes.ContainsKey(item.ClienteId) ? nombresClientes[item.ClienteId] : "Desconocido")</td>
-                            <td class="text-center">
-                                <button class="btn btn-expand btn-sm" 
-                                    @onclick="() => ExpandirPresupuestos(item.Id)" 
-                                    title="Ver presupuestos">
+        <div class="row mt-4">
+            <!-- Añadir margen superior a las tarjetas -->
+            @foreach (var item in listaContratos)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-lg rounded">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                @item.Descripcion
+                                <span class="badge text-bg-@GetEstadoBadge(item.Estado)">
+                                    @item.Estado
+                                </span>
+                            </h5>
+                            <p class="card-text">
+                                <strong>Fecha de Alta:</strong> @item.FechaAlta.ToString("dd/MM/yyyy")<br />
+                                <strong>Instalador:</strong> @(nombresInstaladores.ContainsKey(item.InstaladorId) ? nombresInstaladores[item.InstaladorId] : "Desconocido")<br />
+                                <strong>Cliente:</strong> @(nombresClientes.ContainsKey(item.ClienteId) ? nombresClientes[item.ClienteId] : "Desconocido")
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-expand btn-sm" @onclick="() => ExpandirPresupuestos(item.Id)" title="Ver presupuestos">
                                     <i class="bi bi-chevron-down"></i> <!-- Icono de expansión -->
                                 </button>
-                                <button class="btn btn-edit btn-sm" 
-                                    @onclick="() => Editar(item.Id)" 
-                                    title="Editar contrato">
-                                    <i class="bi bi-pencil-fill icon-size"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm" 
-                                    @onclick="() => Eliminar(item.Id)" 
-                                    title="Eliminar contrato">
-                                    <i class="bi bi-trash-fill icon-size"></i>
-                                </button>
-                                <button class="btn btn-primary btn-sm" 
-                                    @onclick="() => AgregarPresupuesto(item.Id)" 
-                                    title="Agregar Presupuesto">
-                                    <i class="bi bi-plus-circle icon-size"></i>
-                                </button>
-                                <button class="btn btn-warning btn-sm @(item.Estado == "Inactivo" ? "disabled" : "")"
-                                        @onclick="() => BajaObra(item.Id)"
-                                        title="Dar de baja">
-                                    <i class="bi bi-file-earmark-excel icon-size"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                <div>
+                                    <button class="btn btn-edit btn-sm" @onclick="() => Editar(item.Id)" title="Editar contrato">
+                                        <i class="bi bi-pencil-fill icon-size"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" @onclick="() => Eliminar(item.Id)" title="Eliminar contrato">
+                                        <i class="bi bi-trash-fill icon-size"></i>
+                                    </button>
+                                    <button class="btn btn-primary btn-sm" @onclick="() => AgregarPresupuesto(item.Id)" title="Agregar Presupuesto">
+                                        <i class="bi bi-plus-circle icon-size"></i>
+                                    </button>
+                                    <button class="btn btn-warning btn-sm @(item.Estado == "Inactivo" ? "disabled" : "")" @onclick="() => BajaObra(item.Id)" title="Dar de baja">
+                                        <i class="bi bi-file-earmark-excel icon-size"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         @if (item.Id == idSeleccionado)
                         {
-                            <tr>
-                                <td colspan="6">
-                                    <div class="table-responsive">
-                                        @if (presupuestos.Any(p => p.ObraId == item.Id))
+                            <div class="card-footer">
+                                @if (presupuestos.Any(p => p.ObraId == item.Id))
+                                {
+                                    <ul class="list-group">
+                                        @foreach (var presupuesto in presupuestos.Where(p => p.ObraId == item.Id))
                                         {
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Tipo de Presupuesto</th>
-                                                        <th>Precio Final</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var presupuesto in presupuestos.Where(p => p.ObraId == item.Id))
-                                                    {
-                                                        <tr>
-                                                            <td>@presupuesto.Tipo</td>
-                                                            <td>@presupuesto.PrecioFinal.ToString("C")</td>
-                                                            <td class="text-center">
-                                                                <button class="btn btn-delete btn-sm" @onclick="() => BorrarPresupuesto(presupuesto.Id)">
-                                                                    <i class="bi bi-trash-fill icon-size"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>@presupuesto.Tipo</span>
+                                                <span>@presupuesto.PrecioFinal.ToString("C")</span>
+                                                <button class="btn btn-delete btn-sm" @onclick="() => BorrarPresupuesto(presupuesto.Id)">
+                                                    <i class="bi bi-trash-fill icon-size"></i>
+                                                </button>
+                                            </li>
                                         }
-                                        else
-                                        {
-                                            <p class="no-presupuestos-text">
-                                                <i class="bi bi-folder-x"></i> No hay presupuestos asignados a este contrato.
-                                            </p>
-                                        }
-
-                                    </div>
-                                </td>
-                            </tr>
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="no-presupuestos-text">
+                                        <i class="bi bi-folder-x"></i> No hay presupuestos asignados a este contrato.
+                                    </p>
+                                }
+                            </div>
                         }
-                    }
-                </tbody>
-            </table>
+                    </div>
+                </div>
+            }
         </div>
     }
 </div>
+
+
 <div>@entorno</div>
 
 <style>
@@ -148,55 +123,84 @@
     }
 
     .loading-text {
-    text-align: center;
-    color: #888;
+        text-align: center;
+        color: #888;
     }
 
     .no-data-text {
-    text-align: center;
-    color: #888;
+        text-align: center;
+        color: #888;
     }
 
-    .table-responsive {
-    overflow-x: auto;
-    margin-top: 20px;
-    border-radius: 8px;
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    .card {
+        margin-bottom: 20px; /* Espacio entre tarjetas */
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        background-color: white;
     }
 
-    .table-custom {
-    border-collapse: collapse;
+    .card-header {
+        padding: 15px;
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px 8px 0 0;
     }
 
-    .table th {
-    text-align: center; /* Centrar texto en los encabezados */
-    font-weight: bold;
-    background-color: #007bff;
-    color: white;
+    .card-body {
+        padding: 15px;
     }
 
-    .table td, .table th {
-    padding: 12px 15px;
-    vertical-align: middle;
-    text-align: center; /* Centrar texto en las celdas */
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    overflow: hidden; /* Oculta el desbordamiento */
-    text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+        .card-body h5 {
+            margin-top: 0; /* Elimina el margen superior del título dentro del card */
+        }
+
+    .card-footer {
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 0 0 8px 8px;
     }
 
-    .table-hover tbody tr:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
+    .card .badge {
+        margin-right: 10px;
     }
-
 
 
     .icon-size {
-    font-size: 1.2rem;
+        font-size: 1.2rem;
     }
 
+    .btn-expand {
+        margin-right: 10px;
+    }
+
+    .d-flex {
+        align-items: center;
+    }
+
+    .list-group-item {
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .list-group-item .btn-delete {
+            margin-left: 10px;
+        }
+
+    /* Colores de estado */
+    .text-bg-Activo {
+        background-color: #28a745;
+    }
+
+    .text-bg-Inactivo {
+        background-color: #dc3545;
+    }
+
+    .text-bg-Pendiente {
+        background-color: #ffc107;
+    }
 </style>
+
 
 @code {
     private List<Obra> listaContratos;
@@ -208,6 +212,18 @@
     private string Mensaje = "";
     private int idSeleccionado = 0; // ID de la obra seleccionada para expandir
     private string entorno;
+
+
+    // Método para obtener el badge en función del estado
+    private string GetEstadoBadge(string estado)
+    {
+        return estado switch
+        {
+            "Activo" => "badge-success", // Estado Activo -> color verde
+            "Inactivo" => "badge-danger", // Estado Inactivo -> color rojo
+            _ => "badge-secondary" // Otros estados -> color gris
+        };
+    }
 
     protected override async Task OnParametersSetAsync()
     {
