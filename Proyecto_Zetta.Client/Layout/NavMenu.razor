@@ -1,7 +1,7 @@
 ﻿@inject HttpClient Http
 
 
-<div class="navbar navbar-dark fixed-bottom">
+<div class="navbar navbar-dark sticky-bottom">
     <div class="container-fluid justify-content-around d-flex align-items-center">
         <!-- Contratos -->
         <div class="nav-item">
@@ -55,7 +55,7 @@
         @if (entorno == "Development")
         {
             <div class="nav-item">
-                <a class="nav-link no-active" href="https://localhost:7201/swagger" target="_blank">
+                <a class="nav-link not-active" href="https://localhost:7201/swagger" target="_blank">
                     <i class="fas fa-cogs nav-icon"></i>
                     <span>Swagger</span>
                 </a>

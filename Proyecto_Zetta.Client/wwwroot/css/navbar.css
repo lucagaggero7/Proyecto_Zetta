@@ -1,12 +1,26 @@
-﻿.navbar {
+﻿/* Contenido general */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* El body debe ocupar toda la altura disponible */
+}
+
+/* NavMenu siempre visible en la parte inferior */
+.navbar {
     background-color: #212529;
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 7px 14px;
     font-family: 'Open Sans', sans-serif;
-    flex-wrap: wrap;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    box-sizing: border-box;
+    flex-wrap: nowrap; /* Evitar que se envuelvan los elementos en la barra */
 }
 
 .navbar-brand {
@@ -23,47 +37,79 @@
     justify-content: center;
 }
 
+/* Ajustes para el tamaño de los enlaces del NavMenu */
 .nav-link {
-    color: #ccc;
-    font-size: 1.2rem;
+    font-size: 0.9rem; /* Reducimos el tamaño de la fuente en los enlaces */
     display: flex;
     align-items: center;
     text-decoration: none;
     gap: 0.5rem;
+    color: white; /* Aseguramos que el color del texto por defecto sea blanco */
 }
 
     .nav-link i {
-        font-size: 1.5rem;
+        font-size: 1.2rem; /* Reducimos el tamaño de los íconos */
     }
 
+    /* Los enlaces que no están activos (no tienen la clase "active") mantienen el color blanco */
+    .nav-link:not(.active) {
+        color: white; /* Asegura que los enlaces no activos tengan el color blanco */
+    }
+
+    /* Establecemos el color por defecto como blanco y cuando está activo lo cambiamos a azul */
     .nav-link:hover {
         color: #fff;
         transform: scale(1.1);
     }
 
+    /* Solo cambiar el color a azul cuando el link esté activo */
     .nav-link.active {
-        color: #007bff;
+        color: #007bff; /* Azul cuando está activo */
         font-weight: bold;
     }
 
+/* Los botones en el Navbar */
 .navbar .btn {
-    padding: 8px 16px;
+    padding: 6px 12px; /* Reducimos el tamaño de los botones */
     border-radius: 25px;
     background-color: #007bff;
     color: white;
     border: none;
+    font-size: 0.9rem; /* Reducimos el tamaño de la fuente en los botones */
 }
 
+    /* Los botones no deben cambiar el color cuando se pasa el mouse */
     .navbar .btn:hover {
         background-color: #0056b3;
     }
 
-/* Responsividad */
+/* Contenedor principal de la página */
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* El contenedor principal debe ocupar toda la altura de la pantalla */
+}
+
+/* El contenido debe ocupar todo el espacio disponible y evitar que el NavMenu lo tape */
+.content {
+    flex: 1;
+    padding-bottom: 70px; /* Deja espacio para el NavMenu en la parte inferior */
+    overflow: auto; /* Permite scroll si el contenido es más grande que la pantalla */
+}
+
+/* Para dispositivos móviles */
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
-        align-items: center;
         padding: 8px;
+        height: auto; /* Evitar que crezca más de lo necesario */
+        max-height: 120px; /* Limitar la altura máxima del navbar en móviles */
+        overflow-y: auto; /* Permitir el scroll si es necesario */
+    }
+
+    /* Ocultar texto en los enlaces */
+    .nav-link span {
+        display: none; /* Ocultar el texto de los enlaces */
     }
 
     .nav-items {
@@ -71,10 +117,12 @@
         gap: 10px;
         width: 100%;
         text-align: center;
+        padding: 10px 0;
     }
 
     .nav-link {
         font-size: 1rem;
+        justify-content: center; /* Asegura que los íconos estén centrados */
     }
 
     .navbar .btn {
@@ -89,3 +137,14 @@
     }
 
     .nav-link {
+        font-size: 0.9rem;
+    }
+
+    .navbar {
+        padding: 5px 10px;
+    }
+
+    .nav-items {
+        gap: 8px;
+    }
+}

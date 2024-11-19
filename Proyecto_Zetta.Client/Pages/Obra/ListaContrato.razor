@@ -39,10 +39,10 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 @item.Descripcion
-                                <span class="@GetEstadoClase(item.Estado)">
-                                    @item.Estado
-                                </span><br />
                             </h5>
+                            <span class="@GetEstadoClase(item.Estado)">
+                                @item.Estado
+                            </span><br />
                             <p class="card-text">
                                 <strong>Fecha de Alta:</strong> @item.FechaAlta.ToString("dd/MM/yyyy")<br />
                                 <strong>Instalador:</strong> @(nombresInstaladores.ContainsKey(item.InstaladorId) ? nombresInstaladores[item.InstaladorId] : "Desconocido")<br />
@@ -154,15 +154,14 @@
 
     .card-title {
         font-size: 1.25rem;
-        font-weight: 400; /* Cambiamos la fuente a más fina */
-        color: #333; /* Cambiamos el color a un gris oscuro en lugar de azul */
-        margin-bottom: 15px;
-        line-height: 1.5; /* Aseguramos un buen espaciado entre líneas */
+        font-weight: 400;
+        color: #333;
+        margin-bottom: 10px; /* Reducido margen inferior */
     }
 
-        .card-title span {
-            display: inline-block; /* Asegura que el estado se alinee correctamente */
-            margin-top: 5px; /* Añadimos espacio entre la descripción y el estado */
+        .card-title + span {
+            margin-top: 5px; /* Añadir espacio entre el título y el estado */
+            display: block; /* Asegura que el estado se muestre en una nueva línea */
         }
 
     .card-text {
