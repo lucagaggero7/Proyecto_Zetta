@@ -1,0 +1,157 @@
+﻿@page "/ItemsTipo/editar/{itemtipoId:int}"
+@using Proyecto_Zetta.Shared.DTO
+@inject IHttpServicio http
+@inject NavigationManager nav
+
+<div class="container">
+    <h3 class="title">Nuevo Item Tipo</h3>
+
+    <EditForm Model="itemtipo" OnValidSubmit="Grabar">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label>Nombre</label>
+            <InputText class="form-control" @bind-Value="@itemtipo.Nombre" />
+            <ValidationMessage For="@(() => itemtipo.Nombre)" />
+        </div>
+
+        <div class="form-group">
+            <label>Insumos</label>
+            <InputNumber class="form-control" @bind-Value="@itemtipo.Insumos" />
+            <ValidationMessage For="@(() => itemtipo.Insumos)" />
+        </div>
+
+        <div class="form-group">
+            <label>Mano de Obra</label>
+            <InputNumber class="form-control" @bind-Value="@itemtipo.ManodeObra" />
+            <ValidationMessage For="@(() => itemtipo.ManodeObra)" />
+        </div>
+
+        <div class="form-group">
+            <label>Precio Final</label>
+            <InputNumber class="form-control" @bind-Value="@itemtipo.PrecioFinal" />
+            <ValidationMessage For="@(() => itemtipo.PrecioFinal)" />
+        </div>
+
+        <!-- Selección de materiales -->
+        <div class="form-group">
+            <label>Seleccionar Materiales</label>
+            <select class="form-control" multiple @onchange="OnMaterialChange">
+                @foreach (var material in materiales)
+                {
+                    <option value="@material.Id">@material.Nombre</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => itemtipo.MaterialesIds)" />
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" type="submit">Aceptar</button>
+            <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #343a40;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+    .form-control {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    [Parameter] public int itemtipoId { get; set; }
+    private EditarItemTipoDTO itemtipo = new EditarItemTipoDTO();
+    private List<Material> materiales = new List<Material>(); // Lista de materiales disponibles
+    private List<int> selectedMaterialIds = new List<int>(); // Materiales seleccionados
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Cargar los materiales desde la API
+        var httpRespuesta = await http.Get<List<Material>>("api/Materiales");
+        if (!httpRespuesta.Error)
+        {
+            materiales = httpRespuesta.Respuesta;
+        }
+         await Mostrar();
+    }
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<EditarItemTipoDTO>($"api/ItemsTipo/GetById/{itemtipoId}");
+
+        if (!respuesta.Error)
+        {
+            itemtipo = respuesta.Respuesta;
+        }
+        else
+        {
+            nav.NavigateTo("/Contratos");
+        }
+    }
+
+    // Método para manejar el cambio de selección de materiales
+    private void OnMaterialChange(ChangeEventArgs e)
+    {
+        var selectedValues = (string[])e.Value;
+        selectedMaterialIds = selectedValues?.Select(int.Parse).ToList() ?? new List<int>();
+    }
+
+    private async Task Grabar()
+    {
+        // Asignar los materiales seleccionados a la propiedad MaterialIds
+        itemtipo.MaterialesIds = selectedMaterialIds;
+
+        var httpRespuesta = await http.Post<EditarItemTipoDTO>("api/ItemsTipo", itemtipo);
+        if (!httpRespuesta.Error)
+        {
+            nav.NavigateTo("/ItemsTipo");
+        }
+        else
+        {
+            // Manejo de error
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/ItemsTipo");
+    }
+}
