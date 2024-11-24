@@ -67,7 +67,7 @@
                                     <i class="bi bi-file-earmark-excel icon-size"></i>
                                 </button>
                                 <!-- Nuevo botón para ver detalle -->
-                                <button class="btn btn-info btn-sm" @onclick="() => VerDetalle(item.Id)" title="Ver detalle">
+                                <button class="btn btn-info btn-sm" @onclick="() => DetalleContrato(item.Id)" title="Ver detalle">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
@@ -87,6 +87,9 @@
                                                 <span>@presupuesto.PrecioFinal.ToString("C")</span>
                                                 <button class="btn btn-delete btn-sm" @onclick="() => BorrarPresupuesto(presupuesto.Id)">
                                                     <i class="bi bi-trash-fill icon-size"></i>
+                                                </button>
+                                                <button class="btn btn-info btn-sm" @onclick="() => DetallePresupuesto(presupuesto.Id)" title="Ver detalle">
+                                                    <i class="bi bi-eye"></i>
                                                 </button>
                                             </li>
                                         }
@@ -477,8 +480,13 @@
         idSeleccionado = (idSeleccionado == id) ? 0 : id;
     }
 
-    public async Task VerDetalle(int id)
+    public async Task DetalleContrato(int id)
     {
         Navigation.NavigateTo($"/Contratos/detalle/{id}");
+    }
+
+    public async Task DetallePresupuesto(int id)
+    {
+        Navigation.NavigateTo($"/Presupuestos/detalle/{id}");
     }
 }

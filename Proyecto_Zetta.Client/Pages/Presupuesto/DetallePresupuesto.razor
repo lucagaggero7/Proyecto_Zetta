@@ -1,0 +1,98 @@
+﻿@page "/Presupuestos/detalle/{presupuestoId:int}"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@using System.Net.Http.Json;
+@inject IHttpServicio http
+
+<PageTitle>Detalle de Presupuesto</PageTitle>
+
+@if (mensajeError != null)
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else if (presupuesto == null)
+{
+    <p>Cargando detalles...</p>
+}
+else
+{
+    <div class="card shadow-lg rounded">
+        <div class="card-body">
+            <h5 class="card-title">@presupuesto.Tipo</h5>
+            <p><strong>Estado:</strong> @presupuesto.Estado</p>
+            <p><strong>Incluye Materiales:</strong> @presupuesto.MaterialesIncl</p>
+            <p><strong>Insumos:</strong> @presupuesto.Insumos</p>
+            <p><strong>Mano de Obra:</strong> @presupuesto.ManodeObra</p>
+            <p><strong>Precio Final:</strong> @presupuesto.PrecioFinal</p>
+            <p><strong>Cliente:</strong> @clienteNombre</p>
+            <p><strong>Forma de Pago:</strong> @formadepagoNombre</p>
+            <p><strong>Item Tipo:</strong> @itemtipoNombre</p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int presupuestoId { get; set; }
+
+    private Presupuesto presupuesto;
+    private string formadepagoNombre;
+    private int clienteId;
+    private string clienteNombre;
+    private string itemtipoNombre;
+    private string mensajeError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Obtener los detalles del contrato por su ID
+            var resppresupuesto = await http.Get<Presupuesto>($"api/Presupuestos/GetById/{presupuestoId}");
+            if (!resppresupuesto.Error)
+            {
+                presupuesto = resppresupuesto.Respuesta;
+
+                // Obtener forma de pago
+                var respformadepago = await http.Get<FormadePago>($"api/FormasdePago/GetById/{presupuesto.FormadePagoId}");
+                if (!respformadepago.Error)
+                {
+                    var formadepago = respformadepago.Respuesta;
+                    formadepagoNombre = formadepago.Nombre;
+                }
+
+                // Obtener el id de cliente de la obra
+                var respobra = await http.Get<Obra>($"api/Contratos/GetById/{presupuesto.ObraId}");
+                if (!respobra.Error)
+                {
+                    var obra = respobra.Respuesta;
+                   clienteId = obra.ClienteId;
+                }
+
+                // Obtener cliente
+                var respcliente = await http.Get<Cliente>($"api/Clientes/GetById/{clienteId}");
+                if (!respcliente.Error)
+                {
+                    var cliente = respcliente.Respuesta;
+                    clienteNombre = $"{cliente.Nombre} {cliente.Apellido}";
+                }
+
+                // Obtener itemtipo
+                var respitemtipo = await http.Get<ItemTipo>($"api/ItemsTipo/GetById/{presupuesto.ItemTipoId}");
+                if (!respitemtipo.Error)
+                {
+                    var itemtipo = respitemtipo.Respuesta;
+                    itemtipoNombre = itemtipo.Nombre;
+                }
+
+            }
+
+            else
+            {
+                mensajeError = "No se pudo cargar la información del contrato.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = "Error al cargar los detalles: " + ex.Message;
+        }
+    }
+}
