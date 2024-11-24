@@ -66,99 +66,100 @@
 
 <style>
     .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .title {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 20px;
-        color: #343a40;
-        text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #343a40;
+    text-align: center;
     }
 
     .nuevo-cliente-btn {
-        margin-bottom: 20px;
-        display: inline-flex;
-        align-items: center;
-        font-weight: 600;
-        background: linear-gradient(45deg, #007bff, #0056b3);
-        border: none;
-        color: white;
-        transition: background 0.3s ease, transform 0.2s ease;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    color: white;
+    transition: background 0.3s ease, transform 0.2s ease;
     }
 
-        .nuevo-cliente-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(45deg, #0056b3, #007bff);
-        }
+    .nuevo-cliente-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(45deg, #0056b3, #007bff);
+    }
 
     .alert {
-        margin-top: 10px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
+    margin-top: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
     }
 
     .loading-text, .no-data-text {
-        font-size: 1.2rem;
-        color: #6c757d;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    font-size: 1.2rem;
+    color: #6c757d;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     }
 
-        .loading-text i, .no-data-text i {
-            margin-right: 8px;
-        }
+    .loading-text i, .no-data-text i {
+    margin-right: 8px;
+    }
 
     .table-responsive {
-        overflow-x: auto;
-        margin-top: 20px;
-        border-radius: 8px;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .table-custom {
-        border-collapse: collapse;
+    border-collapse: collapse;
     }
 
     .table th {
-        text-align: center; /* Centrar texto en los encabezados */
-        font-weight: bold;
-        background-color: #007bff;
-        color: white;
+    text-align: center; /* Centrar texto en los encabezados */
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
     }
 
     .table td, .table th {
-        padding: 12px 15px;
-        vertical-align: middle;
-        text-align: center; /* Centrar texto en las celdas */
-        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-        overflow: hidden; /* Oculta el desbordamiento */
-        text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+    padding: 12px 15px;
+    vertical-align: middle;
+    text-align: center; /* Centrar texto en las celdas */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Oculta el desbordamiento */
+    text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
     }
 
     .table-hover tbody tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
+    background-color: #f1f1f1;
+    cursor: pointer;
     }
 
-     .icon-size {
-        font-size: 20px; /* Ajusta el tamaño del ícono */
+    .icon-size {
+    font-size: 20px; /* Ajusta el tamaño del ícono */
     }
 
 </style>
 
 @code {
     private List<ItemTipo> listaItemsTipo;
+    private List<ItemTipoMaterial> listaItemsTipoMateriales;
     private string Mensaje = "";
 
     public class SwalResult
@@ -209,11 +210,20 @@
 
     private async Task Borrar(int id)
     {
-        var respuesta = await http.Delete<ItemTipo>($"api/ItemsTipo/{id}");
-        if (respuesta.Error)
+        var respuesta1 = await http.Delete<ItemTipoMaterial>($"api/ItemsTipoMateriales/{id}");
+        if (respuesta1.Error)
         {
-            Mensaje = "No se pudo borrar el item tipo";
+            Mensaje = "No se pudo eliminar la tabla intermedia";
+            return;
         }
+
+        var respuesta2 = await http.Delete<ItemTipo>($"api/ItemsTipo/{id}");
+        if (respuesta2.Error)
+        {
+            Mensaje = "No se pudo eliminar el item tipo";
+        }
+
         await Leer();
     }
+
 }

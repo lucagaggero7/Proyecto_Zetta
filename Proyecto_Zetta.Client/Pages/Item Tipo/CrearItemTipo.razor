@@ -33,15 +33,23 @@
             <ValidationMessage For="@(() => itemtipo.PrecioFinal)" />
         </div>
 
-        <!-- Selección de materiales -->
+        <!-- Selección de materiales con Toggle Buttons -->
         <div class="form-group">
             <label>Seleccionar Materiales</label>
-            <select class="form-control" multiple @onchange="OnMaterialChange">
+            <div class="toggle-button-container">
                 @foreach (var material in materiales)
                 {
-                    <option value="@material.Id">@material.Nombre</option>
+                    <button type="button"
+                            class="toggle-button @(itemtipo.MaterialesIds.Contains(material.Id) ? "active" : "")"
+                            @onclick="() => OnToggleChange(material.Id)">
+                        @if (itemtipo.MaterialesIds.Contains(material.Id))
+                        {
+                            <span>&#10003; <!-- Checkmark (✔) --> </span>
+                        }
+                        @material.Nombre
+                    </button>
                 }
-            </select>
+            </div>
             <ValidationMessage For="@(() => itemtipo.MaterialesIds)" />
         </div>
 
@@ -93,12 +101,53 @@
         padding: 10px 20px;
         font-weight: bold;
     }
+
+    /* Contenedor de botones */
+    .toggle-button-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilos base para cada botón */
+    .toggle-button {
+        padding: 12px 20px;
+        font-size: 1rem;
+        text-align: center;
+        border: 2px solid transparent;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #e9ecef;
+        color: #343a40;
+        transition: all 0.3s ease;
+    }
+
+        .toggle-button:hover {
+            background-color: #dee2e6;
+        }
+
+        /* Estilo para el botón activo */
+        .toggle-button.active {
+            background-color: #28a745;
+            color: white;
+            border-color: #218838;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Estilo para el checkmark */
+        .toggle-button span {
+            margin-right: 8px;
+        }
 </style>
 
 @code {
     private CrearItemTipoDTO itemtipo = new CrearItemTipoDTO();
     private List<Material> materiales = new List<Material>(); // Lista de materiales disponibles
-    private List<int> selectedMaterialIds = new List<int>(); // Materiales seleccionados
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,17 +160,23 @@
     }
 
     // Método para manejar el cambio de selección de materiales
-    private void OnMaterialChange(ChangeEventArgs e)
+    private void OnToggleChange(int materialId)
     {
-        var selectedValues = (string[])e.Value;
-        selectedMaterialIds = selectedValues?.Select(int.Parse).ToList() ?? new List<int>();
+        if (itemtipo.MaterialesIds.Contains(materialId))
+        {
+            // Eliminar el ID si ya está seleccionado
+            itemtipo.MaterialesIds.Remove(materialId);
+        }
+        else
+        {
+            // Agregar el ID si no está seleccionado
+            itemtipo.MaterialesIds.Add(materialId);
+        }
     }
 
     private async Task Grabar()
     {
         // Asignar los materiales seleccionados a la propiedad MaterialIds
-        itemtipo.MaterialesIds = selectedMaterialIds;
-
         var httpRespuesta = await http.Post<CrearItemTipoDTO>("api/ItemsTipo", itemtipo);
         if (!httpRespuesta.Error)
         {

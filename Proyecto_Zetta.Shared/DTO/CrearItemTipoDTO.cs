@@ -28,6 +28,6 @@ namespace Proyecto_Zetta.Shared.DTO
         //    ItemTipoMateriales = new List<ItemTipoMaterial>();
         //}
 
-        public List<int> MaterialesIds { get; set; }
+        public List<int> MaterialesIds { get; set; } = new List<int>(); // Inicialización de lista
     }
 }

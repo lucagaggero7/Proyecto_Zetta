@@ -12,15 +12,15 @@ using Proyecto_Zetta.DB.Data;
 namespace Proyecto_Zetta.DB.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241103021620_EliminarRequiredITM")]
-    partial class EliminarRequiredITM
+    [Migration("20241124214104_ReconstruccionBD")]
+    partial class ReconstruccionBD
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
