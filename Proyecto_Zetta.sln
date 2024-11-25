@@ -13,6 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proyecto_Zetta.Client", "Pr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{61709CDE-2220-40B0-968F-8CF147E2B1E1}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		railway.toml = railway.toml
 	EndProjectSection
 EndProject
